@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "module": "commonjs",
+    "outDir": "./dist",
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "rootDir": "./src",
+    "strict": true,
+    "target": "es2017"
+  },
+  "exclude": ["node_modules"],
+  "include": ["src/**/*", "node_modules/@subql/types/dist/global.d.ts"]
+}
