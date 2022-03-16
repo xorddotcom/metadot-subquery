@@ -128,26 +128,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/load@npm:>6.1.1":
-  version: 16.2.1
-  resolution: "@commitlint/load@npm:16.2.1"
-  dependencies:
-    "@commitlint/config-validator": ^16.2.1
-    "@commitlint/execute-rule": ^16.2.1
-    "@commitlint/resolve-extends": ^16.2.1
-    "@commitlint/types": ^16.2.1
-    "@types/node": ">=12"
-    chalk: ^4.0.0
-    cosmiconfig: ^7.0.0
-    cosmiconfig-typescript-loader: ^1.0.0
-    lodash: ^4.17.19
-    resolve-from: ^5.0.0
-    typescript: ^4.4.3
-  checksum: 2b2fceff10c02ba61a5fa9c24a8f22156af0be6865a6b3b1543d93861d75b1552d7c86ce9cadd8598248387829feee26d0e0e646f3f0822e7a9bc74023e18fde
-  languageName: node
-  linkType: hard
-
-"@commitlint/load@npm:^16.2.3":
+"@commitlint/load@npm:>6.1.1, @commitlint/load@npm:^16.2.3":
   version: 16.2.3
   resolution: "@commitlint/load@npm:16.2.3"
   dependencies:
@@ -2439,8 +2420,8 @@ __metadata:
   linkType: hard
 
 "aws-sdk@npm:^2.1069.0":
-  version: 2.1093.0
-  resolution: "aws-sdk@npm:2.1093.0"
+  version: 2.1094.0
+  resolution: "aws-sdk@npm:2.1094.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -2451,7 +2432,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: 2b2fc480c715fdaadc4ccd6f852afb0dfcb9a947cf1a740cd747959459edb9ec17551f7dcc6c81f9213456343acb9358dd847396a79b3e4fec68235f314b79f9
+  checksum: d1a2f6f7ddef3cc9d38680958e8bcbebf6f2631204f5addb55b627c3b742ba60332e100d2d5f83d9bccc8f9f1f8db0f24934d9bb69513aa4d81ac6843c0157fe
   languageName: node
   linkType: hard
 
@@ -2590,17 +2571,17 @@ __metadata:
   linkType: hard
 
 "browserslist@npm:^4.14.5":
-  version: 4.20.0
-  resolution: "browserslist@npm:4.20.0"
+  version: 4.20.2
+  resolution: "browserslist@npm:4.20.2"
   dependencies:
-    caniuse-lite: ^1.0.30001313
-    electron-to-chromium: ^1.4.76
+    caniuse-lite: ^1.0.30001317
+    electron-to-chromium: ^1.4.84
     escalade: ^3.1.1
     node-releases: ^2.0.2
     picocolors: ^1.0.0
   bin:
     browserslist: cli.js
-  checksum: 6d77f54bd43e7e1b86c3f10a3aa84b6c198f2ecc8b345ebd42cb9feb1c143554ad62a0eaf1365f28d14589a4d1fb12b367ade3798fa493dab5cff4ca525384aa
+  checksum: 18e09beeae32e69fea45fc3642240fb63027b1460d90e24da86377177dca3d82c80f8fa44469d95109e3962f08eb2a23e03037bd5e1f1ec38e4866e2a8572435
   languageName: node
   linkType: hard
 
@@ -2686,17 +2667,17 @@ __metadata:
   linkType: hard
 
 "cacache@npm:^16.0.0":
-  version: 16.0.0
-  resolution: "cacache@npm:16.0.0"
+  version: 16.0.1
+  resolution: "cacache@npm:16.0.1"
   dependencies:
     "@npmcli/fs": ^1.0.0
     "@npmcli/move-file": ^1.1.2
     chownr: ^2.0.0
     fs-minipass: ^2.1.0
-    glob: ^7.1.4
+    glob: ^7.2.0
     infer-owner: ^1.0.4
-    lru-cache: ^6.0.0
-    minipass: ^3.1.1
+    lru-cache: ^7.5.1
+    minipass: ^3.1.6
     minipass-collect: ^1.0.2
     minipass-flush: ^1.0.5
     minipass-pipeline: ^1.2.4
@@ -2707,7 +2688,7 @@ __metadata:
     ssri: ^8.0.1
     tar: ^6.1.11
     unique-filename: ^1.1.1
-  checksum: 1a5404958f60b1dc7c484e00ac5bb0466d8163cda77d20f827875c4fb6043cfedba852340291e96bfbf5995fc5ea8258c31be7a292e92008081d822902ddf22b
+  checksum: 7f461244a6ed30b8e34a1c8d598712035135b5489152cc6458642858ebd8075f39bf0998b768cc29e41263524632af93b41987f8debb703d9a2f29f37cc0552b
   languageName: node
   linkType: hard
 
@@ -2750,7 +2731,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001313":
+"caniuse-lite@npm:^1.0.30001317":
   version: 1.0.30001317
   resolution: "caniuse-lite@npm:1.0.30001317"
   checksum: 0a5fc7fb8c54dde515c2d468e5fc9e0cf2e82dd40d596cdffed90f64c50b5dadd0ab0c25e04769d86488b3115f949abd31d54d1f74d0029b45fa8206a031f47a
@@ -3666,10 +3647,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-to-chromium@npm:^1.4.76":
-  version: 1.4.84
-  resolution: "electron-to-chromium@npm:1.4.84"
-  checksum: f38c3694465705f698094f3228c81237d00da9baba627a4b258195a2c136f30f1204cb4a651f870e05aeed71e0f77069c124554b2ee15372e06c275e0b24978d
+"electron-to-chromium@npm:^1.4.84":
+  version: 1.4.85
+  resolution: "electron-to-chromium@npm:1.4.85"
+  checksum: 87cea37f0aeb7aead8ddbc9c2b308eac4537eb50095b45faaf6d75b72d599392833ed12d777baf908550df4a090b250af2e4176c130c291e28e83a930f1e84f8
   languageName: node
   linkType: hard
 
@@ -4642,11 +4623,11 @@ __metadata:
   linkType: hard
 
 "globals@npm:^13.6.0, globals@npm:^13.9.0":
-  version: 13.12.1
-  resolution: "globals@npm:13.12.1"
+  version: 13.13.0
+  resolution: "globals@npm:13.13.0"
   dependencies:
     type-fest: ^0.20.2
-  checksum: cf7877629c8f2a293b0a7d09d1dcce7f2d426ec2528600c481c5b3f3d070b0a120eb2499439ac0404990fb8a5742c0165b1bf1f52603364001ddc89bea3dda24
+  checksum: c55ea8fd3afecb72567bac41605577e19e68476993dfb0ca4c49b86075af5f0ae3f0f5502525f69010f7c5ea5db6a1c540a80a4f80ebdfb2f686d87b0f05d7e9
   languageName: node
   linkType: hard
 
@@ -6479,7 +6460,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@https://registry.npmjs.org/@achingbrain/node-fetch/-/node-fetch-2.6.7.tgz, node-fetch@npm:^2.6.7":
+"node-fetch@https://registry.npmjs.org/@achingbrain/node-fetch/-/node-fetch-2.6.7.tgz":
+  version: 2.6.7
+  resolution: "node-fetch@https://registry.npmjs.org/@achingbrain/node-fetch/-/node-fetch-2.6.7.tgz"
+  checksum: 1695ebfd42e08640aac6503f15db93a53c3802b5e23f72121ad3621a7ddf5d754d2014d98eab5c76b3003e7394110206f6e39d6310ec9a095827087b67e5e091
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:^2.6.7":
   version: 2.6.7
   resolution: "node-fetch@npm:2.6.7"
   dependencies:
@@ -8047,9 +8035,9 @@ __metadata:
   linkType: hard
 
 "spawn-command@npm:^0.0.2-1":
-  version: 0.0.2-1
-  resolution: "spawn-command@npm:0.0.2-1"
-  checksum: 2cac8519332193d1ed37d57298c4a1f73095e9edd20440fbab4aa47f531da83831734f2b51c44bb42b2747bf3485dec3fa2b0a1003f74c67561f2636622e328b
+  version: 0.0.2
+  resolution: "spawn-command@npm:0.0.2"
+  checksum: e35c5d28177b4d461d33c88cc11f6f3a5079e2b132c11e1746453bbb7a0c0b8a634f07541a2a234fa4758239d88203b758def509161b651e81958894c0b4b64b
   languageName: node
   linkType: hard
 

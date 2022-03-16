@@ -4,8 +4,15 @@
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
 # Node artifact files
-node_modules/
-dist/
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+**/build
+**/dist
+**/node_modules
 
 # lock files
 package-lock.json
@@ -27,7 +34,6 @@ yarn-error.log*
 
 # Maven
 target/
-dist/
 src/types
 
 # JetBrains IDE

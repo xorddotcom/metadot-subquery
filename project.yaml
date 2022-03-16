@@ -1,16 +1,31 @@
 specVersion: 0.2.0
+
 name: metadot-multisig
 version: 0.0.4
 description: multisig subquery for metadot
-repository: "https://github.com/subquery/subql-starter"
+
 schema:
   file: ./schema.graphql
+
 network:
+  # Polkadot
   endpoint: "wss://polkadot.api.onfinality.io/public-ws"
   genesisHash: "0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3"
+  dictionary: "https://api.subquery.network/sq/subquery/dictionary-polkadot"
+
+  # KSM
+  # genesisHash: "0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe"
+  # endpoint: "wss://kusama.api.onfinality.io/public-ws"
+  # dictionary: "https://api.subquery.network/sq/subquery/dictionary-kusama"
+
+  chaintypes:
+    file: ./dist/chaintypes.js
+
 dataSources:
   - kind: substrate/Runtime
     startBlock: 1
+    # startBlock: 8719668   # Polkadot
+    # startBlock: 10340000  # Kusama
     mapping:
       file: ./dist/index.js
       handlers:
@@ -19,7 +34,22 @@ dataSources:
         - handler: handleEvent
           kind: substrate/EventHandler
           filter:
-            module: balances
-            method: Deposit
+            module: multisig
+            method: NewMultisig
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: multisig
+            method: MultisigApproval
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: multisig
+            method: MultisigExecuted
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: multisig
+            method: MultisigCancelled
         - handler: handleCall
           kind: substrate/CallHandler
