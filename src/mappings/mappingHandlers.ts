@@ -1,15 +1,14 @@
 import { SubstrateExtrinsic, SubstrateEvent, SubstrateBlock } from "@subql/types";
 import { Block } from "../types";
-import { Balance } from "@polkadot/types/interfaces";
 import { getBlockTimestamp } from "../helpers/block";
 
-async function ensureBlock(id: string): Promise<void> {
-  const block = await Block.get(id);
-
-  if (!block) {
-    await new Block(id).save();
-  }
-}
+import { createExtrinsic } from "../handlers/extrinsic";
+import {
+  checkApproveMultisig,
+  checkCancelledMultisig,
+  checkExecutedMultisig,
+  checkNewMultisig,
+} from "../handlers/multisig";
 
 export async function handleBlock(block: SubstrateBlock): Promise<void> {
   const hash = block.block.hash.toString();
@@ -27,24 +26,22 @@ export async function handleBlock(block: SubstrateBlock): Promise<void> {
 }
 
 export async function handleEvent(event: SubstrateEvent): Promise<void> {
-  const {
-    event: {
-      data: [account, balance],
-    },
-  } = event;
-  //Retrieve the record by its ID
-  const record = await StarterEntity.get(event.block.block.header.hash.toString());
-  record.field2 = account.toString();
-  //Big integer type Balance of a transfer event
-  record.field3 = (balance as Balance).toBigInt();
-  await record.save();
+  await createExtrinsic(event.extrinsic);
+
+  if (this.section === "multisig" && this.method === "NewMultisig") {
+    await checkNewMultisig(event);
+  }
+  if (this.section === "multisig" && this.method === "MultisigApproval") {
+    await checkApproveMultisig(event);
+  }
+  if (this.section === "multisig" && this.method === "MultisigExecuted") {
+    await checkExecutedMultisig(event);
+  }
+  if (this.section === "multisig" && this.method === "MultisigCancelled") {
+    await checkCancelledMultisig(event);
+  }
 }
 
 export async function handleCall(extrinsic: SubstrateExtrinsic): Promise<void> {
-  const record = await StarterEntity.get(extrinsic.block.block.header.hash.toString());
-  //Date type timestamp
-  record.field4 = extrinsic.block.timestamp;
-  //Boolean tyep
-  record.field5 = true;
-  await record.save();
+  await createExtrinsic(extrinsic);
 }
