@@ -1,17 +1,63 @@
-type StarterEntity @entity {
+enum ApproveStatus {
+  default,
+  cancelled,
+  confirmed
+}
 
-  id: ID! #id is a required field
+type Block @entity {
+  id: ID!
 
-  field1: Int!
+  number: BigInt
+  parentHash: String
+  specVersion: Int
+  timestamp: Date
 
-  field2: String #filed2 is an optional field
+  extrinsics: [Extrinsic] @derivedFrom(field: "block")
+}
 
-  field3: BigInt
+type Extrinsic @entity {
+  id: ID!
 
-  field4: Date
+  args: String
+  method: String
+  nonce: BigInt
+  isSigned: Boolean
+  isSuccess: Boolean
+  section: String
+  signerId: String # AccountId
+  signature: String
+  timestamp: Date
+  tip: BigInt
 
-  field5: Boolean
+  block: Block # create relation to block
+}
 
+type MultisigAccount @entity {
+  id: ID!
 
+  threshold: Int!
+  members: [String!]!
+}
 
+type MultisigRecord @entity {
+  id: ID! # multisigAccount-blockHeight-extrinsicIdx
+
+  createExtrinsicIdx: String! # blockHeight-extrinsicIdx
+  module: String!
+  method: String!
+  multisigAccount: MultisigAccount!
+  timestamp: Date
+  block: Block!
+  confirmBlock: Block
+  status: ApproveStatus! # default/cancelled/confirmed
+  confirmExtrinsicIdx: String
+  cancelExtrinsicIdx: String
+  approvals: [String!]
+}
+
+type ApproveRecord @entity {
+  id: ID! # accountId-blockHeight-extrinsicIdx
+
+  account: String! # approve account address
+  multisigRecord: MultisigRecord!
 }
