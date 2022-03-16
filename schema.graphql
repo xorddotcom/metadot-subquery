@@ -1,6 +1,6 @@
 enum ApproveStatus {
-  default,
-  cancelled,
+  default
+  cancelled
   confirmed
 }
 
@@ -16,8 +16,7 @@ type Block @entity {
 }
 
 type Extrinsic @entity {
-  id: ID!
-
+  id: ID! # hash
   args: String
   method: String
   nonce: BigInt
@@ -43,7 +42,6 @@ type MultisigAccount @entity {
 
 type MultisigRecord @entity {
   id: ID! # multisigAccount-blockHeight-extrinsicIdx
-
   createExtrinsicIdx: String! # blockHeight-extrinsicIdx
   module: String!
   method: String!
@@ -59,7 +57,7 @@ type MultisigRecord @entity {
 
 type ApproveRecord @entity {
   id: ID! # accountId-blockHeight-extrinsicIdx
-
   account: String! # approve account address
   multisigRecord: MultisigRecord!
+  callHash: String!
 }
