@@ -1,13 +1,29 @@
 import { SubstrateExtrinsic, SubstrateEvent, SubstrateBlock } from "@subql/types";
-import { StarterEntity } from "../types";
+import { Block } from "../types";
 import { Balance } from "@polkadot/types/interfaces";
+import { getBlockTimestamp } from "../helpers/block";
+
+async function ensureBlock(id: string): Promise<void> {
+  const block = await Block.get(id);
+
+  if (!block) {
+    await new Block(id).save();
+  }
+}
 
 export async function handleBlock(block: SubstrateBlock): Promise<void> {
-  //Create a new starterEntity with ID using block hash
-  let record = new StarterEntity(block.block.header.hash.toString());
-  //Record block number
-  record.field1 = block.block.header.number.toNumber();
-  await record.save();
+  const hash = block.block.hash.toString();
+  const number = block.block.header.number.toBigInt() || BigInt(0);
+  const blockTimestamp = getBlockTimestamp(block.block);
+  const parentHash = block.block.header.parentHash.toString();
+  const specVersion = block.specVersion;
+
+  const entity = new Block(hash);
+  entity.number = number;
+  entity.timestamp = blockTimestamp;
+  entity.specVersion = specVersion;
+  entity.parentHash = parentHash;
+  await entity.save();
 }
 
 export async function handleEvent(event: SubstrateEvent): Promise<void> {
