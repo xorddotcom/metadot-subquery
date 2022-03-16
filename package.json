@@ -19,7 +19,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.5.0",
-    "husky": "^7.0.4",
+    "husky": "^7.0.0",
     "lint-staged": "^12.3.5",
     "prettier": "^2.6.0",
     "shx": "^0.3.4",
@@ -34,7 +34,11 @@
     "schema.graphql",
     "project.yaml"
   ],
+  "license": "MIT",
   "main": "./dist/index.js",
+  "private": true,
+  "packageManager": "yarn@3.2.0",
+  "repository": "github:ahmedali8/metadot-multisig-subql",
   "scripts": {
     "build": "tsc -build",
     "clean": "shx rm -rf ./dist ./.data",
@@ -48,8 +52,5 @@
     "prettier": "prettier --config ./.prettierrc.yaml --ignore-path ./.prettierignore --write \"./src/**/*.{js,json,md,ts,yaml,yml}\"",
     "prettier:check": "prettier --check --config ./.prettierrc.yaml --ignore-path ./.prettierignore \"./src/**/*.{js,json,md,ts,yaml,yml}\"",
     "typecheck": "tsc --noEmit"
-  },
-  "repository": "github:ahmedali8/metadot-multisig-subql",
-  "license": "MIT",
-  "packageManager": "yarn@3.2.0"
+  }
 }
