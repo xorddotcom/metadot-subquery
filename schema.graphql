@@ -37,6 +37,8 @@ type MultisigAccount @entity {
 
   threshold: Int!
   members: [String!]!
+
+  record: [MultisigRecord] @derivedFrom(field: "multisigAccount")
 }
 
 type MultisigRecord @entity {
