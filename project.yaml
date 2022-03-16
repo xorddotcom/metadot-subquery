@@ -35,21 +35,25 @@ dataSources:
           kind: substrate/EventHandler
           filter:
             module: multisig
+            # A new multisig operation has begun. [approving, multisig, call_hash]
             method: NewMultisig
         - handler: handleEvent
           kind: substrate/EventHandler
           filter:
             module: multisig
+            # A multisig operation has been approved by someone. [approving, timepoint, multisig, call_hash]
             method: MultisigApproval
         - handler: handleEvent
           kind: substrate/EventHandler
           filter:
             module: multisig
+            # A multisig operation has been executed. [approving, timepoint, multisig, call_hash]
             method: MultisigExecuted
         - handler: handleEvent
           kind: substrate/EventHandler
           filter:
             module: multisig
+            # A multisig operation has been cancelled. [cancelling, timepoint, multisig, call_hash]
             method: MultisigCancelled
         - handler: handleCall
           kind: substrate/CallHandler
