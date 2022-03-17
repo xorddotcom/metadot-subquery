@@ -24,9 +24,6 @@
     "shx": "^0.3.4",
     "typescript": "^4.6.2"
   },
-  "exports": {
-    "chaintypes": "./src/chaintypes.ts"
-  },
   "files": [
     "dist",
     "schema.graphql",
@@ -38,15 +35,15 @@
   "packageManager": "yarn@3.2.0",
   "repository": "github:ahmedali8/metadot-multisig-subql",
   "scripts": {
-    "build": "tsc -build",
-    "clean": "shx rm -rf ./dist ./.data",
+    "build": "./scripts/build.sh",
+    "clean": "./scripts/clean.sh",
     "codegen": "./node_modules/.bin/subql codegen",
     "commit": "git-cz",
     "lint": "yarn lint:ts && yarn prettier:check && yarn typecheck",
     "lint:ts": "eslint --config ./.eslintrc.yaml --ignore-path ./.eslintignore --ext .js,.ts .",
     "postinstall": "husky install",
     "prepack": "yarn clean && yarn build",
-    "start": "docker-compose pull && docker-compose up --remove-orphans",
+    "start": "./scripts/start.sh",
     "prettier": "prettier --config ./.prettierrc.yaml --ignore-path ./.prettierignore --write \"./src/**/*.{js,json,md,ts,yaml,yml}\"",
     "prettier:check": "prettier --check --config ./.prettierrc.yaml --ignore-path ./.prettierignore \"./src/**/*.{js,json,md,ts,yaml,yml}\"",
     "typecheck": "tsc --noEmit"
