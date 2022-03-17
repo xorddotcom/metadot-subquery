@@ -1,5 +1,4 @@
 version: "3"
-
 services:
   postgres:
     image: postgres:12-alpine
@@ -14,12 +13,10 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
   subquery-node:
     image: onfinality/subql-node:latest
     depends_on:
-      "postgres":
-        condition: service_healthy
+      - "postgres"
     restart: always
     environment:
       DB_USER: postgres
@@ -37,16 +34,13 @@ services:
       interval: 3s
       timeout: 5s
       retries: 10
-
   graphql-engine:
     image: onfinality/subql-query:latest
     ports:
       - 3000:3000
     depends_on:
-      "postgres":
-        condition: service_healthy
-      "subquery-node":
-        condition: service_healthy
+      - "postgres"
+      - "subquery-node"
     restart: always
     environment:
       DB_USER: postgres
