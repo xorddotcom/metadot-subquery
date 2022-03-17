@@ -10,3 +10,5 @@ parserOptions:
 plugins:
   - "@typescript-eslint"
 root: true
+rules:
+  no-undef: "warn"
