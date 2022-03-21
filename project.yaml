@@ -9,9 +9,9 @@ schema:
 
 network:
   # Polkadot
-  endpoint: "wss://polkadot.api.onfinality.io/public-ws"
   genesisHash: "0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3"
-  dictionary: "https://api.subquery.network/sq/subquery/dictionary-polkadot"
+  endpoint: wss://polkadot.api.onfinality.io/public-ws
+  dictionary: https://api.subquery.network/sq/subquery/dictionary-polkadot
 
   # KSM
   # genesisHash: "0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe"
@@ -20,8 +20,8 @@ network:
 
 dataSources:
   - kind: substrate/Runtime
-    startBlock: 1
-    # startBlock: 8719668   # Polkadot
+    # startBlock: 1
+    startBlock: 8719668 # Polkadot
     # startBlock: 10340000  # Kusama
     mapping:
       file: ./dist/index.js
@@ -52,5 +52,6 @@ dataSources:
             module: multisig
             # A multisig operation has been cancelled. [cancelling, timepoint, multisig, call_hash]
             method: MultisigCancelled
+        # saves every extrinsic call on the chain
         - handler: handleCall
           kind: substrate/CallHandler
