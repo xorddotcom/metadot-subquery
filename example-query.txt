@@ -1,0 +1,25 @@
+{
+  query {
+    extrinsics(
+      filter: {
+        section: {
+          equalTo: "multisig"
+        }
+        method: {
+          equalTo: "asMulti"
+        }
+      }
+    ) {
+      nodes {
+        block {
+          number
+        }
+        id
+        method
+        section
+        args
+        signature
+      }
+    }
+  }
+}
