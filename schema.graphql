@@ -5,8 +5,7 @@ enum ApproveStatus {
 }
 
 type Block @entity {
-  id: ID!
-
+  id: ID! # block hash
   number: BigInt
   parentHash: String
   specVersion: Int
@@ -16,7 +15,7 @@ type Block @entity {
 }
 
 type Extrinsic @entity {
-  id: ID! # hash
+  id: ID! # extrinsic hash
   args: String
   method: String
   nonce: BigInt
@@ -32,8 +31,7 @@ type Extrinsic @entity {
 }
 
 type MultisigAccount @entity {
-  id: ID!
-
+  id: ID! # multisigAccountId (address)
   threshold: Int!
   members: [String!]!
 
@@ -41,7 +39,7 @@ type MultisigAccount @entity {
 }
 
 type MultisigRecord @entity {
-  id: ID! # multisigAccount-blockHeight-extrinsicIdx
+  id: ID! # multisigAccountId-blockHeight-extrinsicIdx
   createExtrinsicIdx: String! # blockHeight-extrinsicIdx
   module: String!
   method: String!
