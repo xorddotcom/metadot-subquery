@@ -12,6 +12,7 @@ type Block @entity {
   timestamp: Date
 
   extrinsics: [Extrinsic] @derivedFrom(field: "block")
+  events: [Event] @derivedFrom(field: "block")
 }
 
 type Extrinsic @entity {
@@ -28,6 +29,19 @@ type Extrinsic @entity {
   tip: BigInt
 
   block: Block # create relation to block
+  events: [Event] @derivedFrom(field: "extrinsic")
+}
+
+type Event @entity {
+  id: ID! # blockNumber-eventIdx
+  index: Int!
+  section: String!
+  method: String!
+  data: String!
+  timestamp: Date
+
+  block: Block # create relation to block
+  extrinsic: Extrinsic # create relation to extrinsic
 }
 
 type MultisigAccount @entity {
