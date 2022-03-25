@@ -52,6 +52,11 @@ dataSources:
             module: multisig
             # A multisig operation has been cancelled. [cancelling, timepoint, multisig, call_hash]
             method: MultisigCancelled
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: balances
+            method: Transfer
         # saves every extrinsic call on the chain
         - handler: handleCall
           kind: substrate/CallHandler

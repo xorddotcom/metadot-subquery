@@ -23,11 +23,10 @@ type Extrinsic @entity {
   isSigned: Boolean
   isSuccess: Boolean
   section: String
-  signerId: String # AccountId
   signature: String
   timestamp: Date
   tip: BigInt
-
+  signer: Account # create relation to Account
   block: Block # create relation to block
   events: [Event] @derivedFrom(field: "extrinsic")
 }
@@ -72,4 +71,33 @@ type ApproveRecord @entity {
   account: String! # approve account address
   multisigRecord: MultisigRecord!
   callHash: String!
+}
+
+type Token @entity {
+  id: ID!
+
+  name: String
+  decimals: BigInt!
+}
+
+type Account @entity {
+  id: ID! # accountId
+  transferTotalCount: Int
+
+  extrinsics: [Extrinsic] @derivedFrom(field: "signer")
+  transferFrom: [Transfer!]! @derivedFrom(field: "from")
+  transferTo: [Transfer!]! @derivedFrom(field: "to")
+}
+
+type Transfer @entity {
+  id: ID! # blockNumber-eventIdx
+  from: Account!
+  to: Account!
+  token: Token
+  amount: BigInt!
+  timestamp: Date!
+  extrinsicHash: String
+  status: Boolean!
+
+  block: Block # create relation to Block
 }
