@@ -2,6 +2,7 @@ import { SubstrateExtrinsic } from "@subql/types";
 import { ensureBlock } from "./block";
 import { checkIfExtrinsicExecuteSuccess } from "../helpers/extrinsic";
 import { Extrinsic } from "../types";
+import { ensureAccount } from "./account";
 
 export async function ensureExtrinsic(id: string): Promise<void> {
   const extrinsic = await Extrinsic.get(id);
@@ -55,6 +56,7 @@ export async function handleExtrinsic(
     const entity = new Extrinsic(id);
 
     await ensureBlock(blockHash);
+    await ensureAccount(signer);
 
     entity.method = method;
     entity.section = section;
