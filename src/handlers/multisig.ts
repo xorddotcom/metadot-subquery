@@ -46,7 +46,7 @@ export async function saveApproveRecord(
   await entity.save();
 }
 
-export async function checkNewMultisig(event: SubstrateEvent): Promise<void> {
+export async function newMultisigHandler(event: SubstrateEvent): Promise<void> {
   await ensureBlock(event.block.block.header.hash.toString());
   const {
     event: { data },
@@ -78,7 +78,7 @@ export async function checkNewMultisig(event: SubstrateEvent): Promise<void> {
   await saveApproveRecord(accountId, multisigAccountId, extrinsicIdx, callHash);
 }
 
-export async function checkApproveMultisig(event: SubstrateEvent): Promise<void> {
+export async function approveMultisigHandler(event: SubstrateEvent): Promise<void> {
   await ensureBlock(event.block.block.header.hash.toString());
 
   const {
@@ -106,7 +106,7 @@ export async function checkApproveMultisig(event: SubstrateEvent): Promise<void>
   await multisigRecord.save();
 }
 
-export async function checkExecutedMultisig(event: SubstrateEvent): Promise<void> {
+export async function executedMultisigHandler(event: SubstrateEvent): Promise<void> {
   const currentBlockId = event.block.block.header.hash.toString();
   await ensureBlock(currentBlockId);
 
@@ -139,7 +139,7 @@ export async function checkExecutedMultisig(event: SubstrateEvent): Promise<void
   await multisigRecord.save();
 }
 
-export async function checkCancelledMultisig(event: SubstrateEvent): Promise<void> {
+export async function cancelledMultisigHandler(event: SubstrateEvent): Promise<void> {
   await ensureBlock(event.block.block.header.hash.toString());
 
   const {

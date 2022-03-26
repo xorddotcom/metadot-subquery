@@ -4,10 +4,10 @@ import { SubstrateEvent } from "@subql/types";
 import { Event } from "../types";
 import { handleExtrinsic } from "./extrinsic";
 import {
-  checkApproveMultisig,
-  checkCancelledMultisig,
-  checkExecutedMultisig,
-  checkNewMultisig,
+  approveMultisigHandler,
+  cancelledMultisigHandler,
+  executedMultisigHandler,
+  newMultisigHandler,
 } from "./multisig";
 import { transferHandler } from "./transfer";
 
@@ -60,16 +60,16 @@ export async function eventHandler(
 
     // MULTISIG
     if (section === "multisig" && method === "NewMultisig") {
-      await checkNewMultisig(event);
+      await newMultisigHandler(event);
     }
     if (section === "multisig" && method === "MultisigApproval") {
-      await checkApproveMultisig(event);
+      await approveMultisigHandler(event);
     }
     if (section === "multisig" && method === "MultisigExecuted") {
-      await checkExecutedMultisig(event);
+      await executedMultisigHandler(event);
     }
     if (section === "multisig" && method === "MultisigCancelled") {
-      await checkCancelledMultisig(event);
+      await cancelledMultisigHandler(event);
     }
 
     // TRANSFER
