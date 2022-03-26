@@ -1,14 +1,14 @@
+import { EventRecord } from "@polkadot/types/interfaces";
 import { SubstrateEvent } from "@subql/types";
-import { ensureExtrinsic, handleExtrinsic } from "./extrinsic";
+
+import { Event } from "../types";
+import { handleExtrinsic } from "./extrinsic";
 import {
   checkApproveMultisig,
   checkCancelledMultisig,
   checkExecutedMultisig,
   checkNewMultisig,
 } from "./multisig";
-import { EventRecord } from "@polkadot/types/interfaces";
-import { Event } from "../types";
-import { ensureBlock } from "./block";
 import { transferHandler } from "./transfer";
 
 export async function eventHandler(

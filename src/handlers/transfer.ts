@@ -1,10 +1,10 @@
-import { SubstrateEvent } from "@subql/types";
 import { Balance } from "@polkadot/types/interfaces";
+import { SubstrateEvent } from "@subql/types";
+
 import { SupportedTokens, TOKEN_INFO } from "../helpers/token";
 import { Transfer } from "../types";
-import { ensureAccount, updateTransferStatistic } from "./account";
+import { ensureAccounts, updateTransferStatistics } from "./account";
 import { ensureBlock } from "./block";
-import { checkIfExtrinsicExecuteSuccess } from "../helpers/extrinsic";
 import { ensureToken } from "./token";
 
 export async function transferHandler(event: SubstrateEvent): Promise<void> {
@@ -22,15 +22,11 @@ export async function transferHandler(event: SubstrateEvent): Promise<void> {
   const transformedAmount = (amount as Balance).toBigInt();
   const extrinsicHash = event.extrinsic?.extrinsic.hash.toString();
   const timestamp = event.block.timestamp;
-  const isSuccess = checkIfExtrinsicExecuteSuccess(event.extrinsic);
+  const isSuccess = event.extrinsic ? event.extrinsic.success : true;
 
-  // to
-  await ensureAccount(to);
-  await updateTransferStatistic(to);
-
-  // from
-  await ensureAccount(from);
-  await updateTransferStatistic(from);
+  // to and from
+  await ensureAccounts([to, from]);
+  await updateTransferStatistics([to, from]);
 
   // set token details
   await ensureToken(name, expendedDecimals);

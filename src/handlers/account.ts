@@ -14,10 +14,7 @@ export async function ensureAccount(id: string): Promise<Account> {
 
 export async function ensureAccounts(ids: string[]): Promise<void> {
   for (const id of ids) {
-    const account = await Account.get(id);
-    if (!account) {
-      await new Account(id).save();
-    }
+    await ensureAccount(id);
   }
 }
 
@@ -43,4 +40,10 @@ export async function updateTransferStatistic(id: string): Promise<void> {
   const account = await getAccountById(id);
 
   await updateAccount(id, { transferTotalCount: account.transferTotalCount + 1 });
+}
+
+export async function updateTransferStatistics(ids: string[]): Promise<void> {
+  for (const id of ids) {
+    await updateTransferStatistic(id);
+  }
 }

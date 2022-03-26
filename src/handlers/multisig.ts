@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { SubstrateEvent } from "@subql/types";
-import { ensureBlock } from "./block";
+
 import { ApproveRecord, ApproveStatus, Extrinsic, MultisigAccount, MultisigRecord } from "../types";
+import { ensureBlock } from "./block";
 
 export async function ensureMultisigAccount(
   multisigAccountId: string,
@@ -12,7 +14,7 @@ export async function ensureMultisigAccount(
     entity = new MultisigAccount(multisigAccountId);
     const jsonExtrinsicArgs = JSON.parse(extrinsicArgs) as any[];
     let threshold = 0;
-    let members: any[] = [];
+    let members: string[] = [];
 
     jsonExtrinsicArgs.forEach(arg => {
       if (arg.name === "threshold") {

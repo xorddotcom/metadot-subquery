@@ -1,8 +1,9 @@
 import { SubstrateExtrinsic } from "@subql/types";
-import { ensureBlock } from "./block";
+
 import { checkIfExtrinsicExecuteSuccess } from "../helpers/extrinsic";
 import { Extrinsic } from "../types";
 import { ensureAccount } from "./account";
+import { ensureBlock } from "./block";
 
 export async function ensureExtrinsic(id: string): Promise<void> {
   const extrinsic = await Extrinsic.get(id);

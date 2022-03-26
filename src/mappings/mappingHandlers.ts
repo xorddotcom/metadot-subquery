@@ -1,4 +1,5 @@
-import { SubstrateExtrinsic, SubstrateEvent, SubstrateBlock } from "@subql/types";
+import { SubstrateBlock, SubstrateEvent, SubstrateExtrinsic } from "@subql/types";
+
 import { blockHandler } from "../handlers/block";
 import { eventHandler } from "../handlers/event";
 import { handleExtrinsic } from "../handlers/extrinsic";

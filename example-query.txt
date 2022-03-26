@@ -23,3 +23,46 @@
     }
   }
 }
+
+
+
+{
+  query {
+    accounts {
+      nodes {
+        id
+        transferTotalCount
+        extrinsics(
+          filter: {
+            section: {
+              equalTo: "balances"
+            }
+            method: {
+              equalTo: "Transfer"
+            }
+            isSuccess: {
+              equalTo: false
+            }
+          }
+        ) {
+          nodes {
+            id
+            isSuccess
+          }
+        }
+        transferTo(
+          filter:{
+            status: {
+              equalTo: false
+            }
+          }
+        ) {
+          nodes {
+            id
+            status
+          }
+        }
+      }
+    }
+  }
+}
