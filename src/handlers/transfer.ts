@@ -12,7 +12,9 @@ export async function transferHandler(event: SubstrateEvent): Promise<void> {
   const decimals = TOKEN_INFO[SupportedTokens.POLKADOT].decimals.new;
 
   const data = event.event.data;
-  const [from, to, amount] = JSON.parse(data.toString());
+  const from = data[0].toString();
+  const to = data[1].toString();
+  const amount = data[2];
 
   const blockId = event.block.block.hash.toString();
   const blockNumber = event.block.block.header.number.toNumber();
