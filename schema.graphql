@@ -98,6 +98,7 @@ type Transfer @entity {
   timestamp: Date!
   extrinsicHash: String
   status: Boolean!
+  fees: BigInt!
 
   block: Block # create relation to Block
 }
