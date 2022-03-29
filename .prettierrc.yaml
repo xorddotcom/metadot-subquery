@@ -1,5 +1,5 @@
 bracketSpacing: true
-endOfLine: auto
+endOfLine: lf
 printWidth: 100
 singleQuote: false
 tabWidth: 2
