@@ -8,8 +8,8 @@ import { ensureBlock } from "./block";
 import { ensureToken } from "./token";
 
 export async function transferHandler(event: SubstrateEvent): Promise<void> {
-  const name = TOKEN_INFO[SupportedTokens.POLKADOT].name;
-  const decimals = TOKEN_INFO[SupportedTokens.POLKADOT].decimals.new;
+  const name = TOKEN_INFO[SupportedTokens.KUSAMA].name;
+  const decimals = TOKEN_INFO[SupportedTokens.KUSAMA].decimals;
 
   const data = event.event.data;
   const from = data[0].toString();
