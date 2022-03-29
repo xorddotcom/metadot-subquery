@@ -66,3 +66,43 @@
     }
   }
 }
+
+{
+  query {
+    accounts {
+      nodes {
+        id
+        transferTo {
+          nodes {
+            id
+            token {
+             id
+              decimals
+            }
+            extrinsicHash
+            amount
+            status
+            toId
+            fromId
+            timestamp
+          }
+        }
+        transferFrom {
+          nodes {
+            id
+            token {
+             id
+              decimals
+            }
+            extrinsicHash
+            amount
+            status
+            toId
+            fromId
+            timestamp
+          }
+        }
+      }
+    }
+  }
+}
