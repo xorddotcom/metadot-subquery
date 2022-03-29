@@ -2,7 +2,8 @@ import { EventRecord } from "@polkadot/types/interfaces";
 import { SubstrateEvent } from "@subql/types";
 
 import { Event } from "../types";
-import { handleExtrinsic } from "./extrinsic";
+import { ensureBlock } from "./block";
+import { ensureExtrinsic } from "./extrinsic";
 import {
   approveMultisigHandler,
   cancelledMultisigHandler,
@@ -35,13 +36,13 @@ export async function eventHandler(
   const method = event.event.method;
   const data = event.event.data.toString();
   const extrinsicHash =
-    event?.extrinsic?.extrinsic?.hash?.toString() === "null"
+    event.extrinsic?.extrinsic.hash.toString() === "null"
       ? undefined
-      : event?.extrinsic?.extrinsic?.hash?.toString();
+      : event.extrinsic?.extrinsic.hash.toString();
   const timestamp = event.block.timestamp;
 
   const save = async (): Promise<void> => {
-    // await ensureBlock(blockHash);
+    await ensureBlock(blockHash);
 
     const entity = new Event(id);
     entity.index = index;
@@ -51,9 +52,7 @@ export async function eventHandler(
     entity.timestamp = timestamp;
     entity.blockId = blockHash;
     if (extrinsicHash) {
-      // await ensureExtrinsic(extrinsicHash);
-      const handler = await handleExtrinsic(event.extrinsic);
-      await handler.save();
+      await ensureExtrinsic(extrinsicHash);
       entity.extrinsicId = extrinsicHash;
     }
     await entity.save();
