@@ -1322,7 +1322,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subql/cli@npm:latest":
+"@subql/cli@npm:0.22.0":
   version: 0.22.0
   resolution: "@subql/cli@npm:0.22.0"
   dependencies:
@@ -1478,7 +1478,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subql/types@npm:0.14.0, @subql/types@npm:latest":
+"@subql/types@npm:0.14.0":
   version: 0.14.0
   resolution: "@subql/types@npm:0.14.0"
   peerDependencies:
@@ -6031,8 +6031,8 @@ __metadata:
     "@commitlint/cli": ^16.2.3
     "@commitlint/config-conventional": ^16.2.1
     "@polkadot/api": ^7.12.1
-    "@subql/cli": latest
-    "@subql/types": latest
+    "@subql/cli": 0.22.0
+    "@subql/types": 0.14.0
     "@typescript-eslint/eslint-plugin": ^2.0.0
     "@typescript-eslint/parser": ^2.0.0
     commitizen: ^4.2.4
