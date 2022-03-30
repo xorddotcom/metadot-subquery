@@ -3,7 +3,7 @@ import { SubstrateEvent } from "@subql/types";
 
 import { Event } from "../types";
 import { ensureBlock } from "./block";
-import { ensureExtrinsic } from "./extrinsic";
+import { handleExtrinsic } from "./extrinsic";
 import {
   approveMultisigHandler,
   cancelledMultisigHandler,
@@ -36,25 +36,26 @@ export async function eventHandler(
   const method = event.event.method;
   const data = event.event.data.toString();
   const extrinsicHash =
-    event.extrinsic?.extrinsic.hash.toString() === "null"
+    event?.extrinsic?.extrinsic?.hash?.toString() === "null"
       ? undefined
-      : event.extrinsic?.extrinsic.hash.toString();
+      : event?.extrinsic?.extrinsic?.hash?.toString();
   const timestamp = event.block.timestamp;
 
   const save = async (): Promise<void> => {
-    await ensureBlock(blockHash);
-
     const entity = new Event(id);
+
+    await ensureBlock(blockHash);
+    if (extrinsicHash) {
+      await (await handleExtrinsic(event.extrinsic)).save();
+      entity.extrinsicId = extrinsicHash;
+    }
+
     entity.index = index;
     entity.section = section;
     entity.method = method;
     entity.data = data;
     entity.timestamp = timestamp;
     entity.blockId = blockHash;
-    if (extrinsicHash) {
-      await ensureExtrinsic(extrinsicHash);
-      entity.extrinsicId = extrinsicHash;
-    }
     await entity.save();
 
     // MULTISIG
