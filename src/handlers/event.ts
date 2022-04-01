@@ -2,6 +2,7 @@ import { EventRecord } from "@polkadot/types/interfaces";
 import { SubstrateEvent } from "@subql/types";
 
 import { Event } from "../types";
+import { batchHandler } from "./batch";
 import { ensureBlock } from "./block";
 import { handleExtrinsic } from "./extrinsic";
 import {
@@ -57,6 +58,11 @@ export async function eventHandler(
     entity.timestamp = timestamp;
     entity.blockId = blockHash;
     await entity.save();
+
+    // BATCH
+    if (section === "utility" && (method === "BatchCompleted" || method === "BatchInterrupted")) {
+      await batchHandler(event);
+    }
 
     // MULTISIG
     if (section === "multisig" && method === "NewMultisig") {
