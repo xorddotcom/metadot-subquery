@@ -39,7 +39,7 @@ export async function handleExtrinsic(
     const result = args.map((arg, index) => {
       const { name, type } = argsDef[index];
 
-      return { name, type, value: arg.toHuman() };
+      return { name, type, value: arg.toJSON() };
     });
 
     return JSON.stringify(result);
