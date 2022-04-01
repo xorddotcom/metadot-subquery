@@ -58,6 +58,16 @@ dataSources:
           filter:
             module: balances
             method: Transfer
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: utility
+            method: BatchCompleted
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: utility
+            method: BatchInterrupted
         # saves every extrinsic call on the chain
         - handler: handleCall
           kind: substrate/CallHandler

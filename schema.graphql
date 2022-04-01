@@ -4,6 +4,11 @@ enum ApproveStatus {
   confirmed
 }
 
+enum BatchStatus {
+  completed
+  interrupted
+}
+
 type Block @entity {
   id: ID! # block hash
   number: BigInt
@@ -101,4 +106,33 @@ type Transfer @entity {
   fees: BigInt!
 
   block: Block # create relation to Block
+}
+
+# here callNumber is call index
+type CallRecord @entity {
+  id: ID! # callNumber-extrinsicIdx
+  index: Int!
+  module: String!
+  name: String!
+  paramDestId: String!
+  paramValue: BigInt!
+
+  batchRecord: BatchRecord
+}
+
+type BatchRecord @entity {
+  id: ID! # blockHeight-callNumber-extrinsicIdx
+  extrinsicHash: String
+  status: BatchStatus!
+  module: String! # utility
+  method: String! # batch
+  timestamp: Date!
+  confirmExtrinsicIdx: String
+  cancelExtrinsicIdx: String
+  signature: String
+
+  sender: Account!
+  block: Block # create relation to Block
+  extrinsics: Extrinsic # create relation to Extrinsic
+  calls: [CallRecord] @derivedFrom(field: "batchRecord")
 }
