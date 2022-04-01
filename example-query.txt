@@ -24,6 +24,137 @@
   }
 }
 
+{
+  "block": {
+    "number": "8721752"
+  },
+  "id": "0x2df7bf8df8fc7ede57ee4a2e274c333e116ea59bce6c256453cdaf98a446a768",
+  "method": "asMulti",
+  "section": "multisig",
+  "args": "[
+    {
+      "name":"threshold",
+      "type":"u16",
+      "value":"9"
+    },
+    {
+      "name":"otherSignatories",
+      "type":"Vec<AccountId32>",
+      "value":[
+        "1EXzxoEbZf6KXzBhKSfcBbtQCfoyZfZRF3EoKF3hEuvUQX8",
+        "1QwHULKdy5e5WoXFMuDYvMF2xJbHi9PHjFrRpdytdrJ2DPX",
+        "12EhrWGTAEEjETcQhwvus22bYMoDC7iDsnyroD2gSdM9EsK7",
+        "12RFJKR4yuB9ADfgBvFu1JWZeCeNtiDy6i5BMrUMoWymPRPa",
+        "12mP4sjCfKbDyMRAEyLpkeHeoYtS5USY4x34n9NMwQrcEyoh",
+        "131Tfsnu6vTEUubHkEPmTdATLW3NvPbNkEyvDUZw6PzabSiS",
+        "13pkWw1WuWj4uuKJvKBx4x5NohAPmgK8viHvZdBCzBJmgtiJ",
+        "13zFC33GPqhtjAJ5VQQQJ19TDmKDZoKmev2bUBTeYnK6X8md",
+        "14RYaXRSqb9rPqMaAVp1UZW2czQ6dMNGMbvukwfifi6m8ZgZ",
+        "14SfG4xbpjDEfsaVxGC5HmAxc4x6wcAgD9wpqqm7BzQ75h6d",
+        "14fYYSybeH5NM9s28YymdLc25ZWmvv9dFqdvjZ4jJrMfwgMG",
+        "14mwSGdhdrAA3pGoKSX1tWguFREswWucAsr7kcHbdsf7fU7Q",
+        "167rjWHghVwBJ52mz8sNkqr5bKu5vpchbc9CBoieBhVX714h"
+      ]
+    },
+    {
+      "name":"maybeTimepoint",
+      "type":"Option<PalletMultisigTimepoint>",
+      "value":{
+        "height":"8,719,669",
+        "index":"2"
+      }
+    },
+    {
+      "name":"call",
+      "type":"WrapperKeepOpaque<Call>",
+      "value":{
+        "args":{
+          "ratio":"0.00%"
+        },
+        "method":"fillBlock",
+        "section":"system"
+      }
+    },
+    {
+      "name":"storeCall",
+      "type":"bool",
+      "value":true
+    },
+    {
+      "name":"maxWeight",
+      "type":"u64",
+      "value":"0"
+    }
+  ]",
+  "signature": "0x624d4701f984263cbc4dca035f68c5df1c2d0ef19f75783b6eeb7d2c7424431b1239af557635afdde8d5a620be5d909d202bfe9af64210b1e8cf9979e2a6bd8a"
+},
+
+{
+  "block": {
+    "number": "8733141"
+  },
+  "id": "0x1be72afd9628350b3a6f42a92e4823a945ebba02f368f5e42d543f9a3ff973a5",
+  "method": "asMulti",
+  "section": "multisig",
+  "args": "[
+    {
+      "name":"threshold",
+      "type":"u16",
+      "value":"2"
+    },
+    {
+      "name":"otherSignatories",
+      "type":"Vec<AccountId32>",
+      "value":[
+        "14aowFh6MvD3S8CXtdZvwGYY8c8SHqQyeSx38VWtaM5XM8nH",
+        "14c7JGwnCSJaG4Ztg9ozhRmGEX4XWKRUHWAXVcu59U2mhfp4"
+      ]
+    },
+    {
+      "name":"maybeTimepoint",
+      "type":"Option<PalletMultisigTimepoint>",
+      "value":{
+        "height":"8,733,132",
+        "index":"2"
+      }
+    },
+    {
+      "name":"call",
+      "type":"WrapperKeepOpaque<Call>",
+      "value":{
+        "args":{
+          "dest":{
+            "Id":"14LWjrarnWRK9pDyCh7rqSwshR7LrCaCzyZMtBsWcZ2QSbfy"
+          },
+          "value":"477,099,236,600"
+        },
+        "method":"transfer",
+        "section":"balances"
+      }
+    },
+    {
+      "name":"storeCall",
+      "type":"bool",
+      "value":false
+    },
+    {
+      "name":"maxWeight",
+      "type":"u64",
+      "value":"640,000,000"
+    }
+  ]",
+  "signature": "0xfb15c898c6ec3e2d3cc432dbfed42fc51c50c055dee427aa6964fae6c73b05f2c887e3213b154463da8802c065f20d0626e09a8de45e3bb46325d5a9aee2fd0f"
+},
+
+
+
+
+
+
+
+
+
+
 
 
 {
@@ -105,4 +236,86 @@
       }
     }
   }
+}
+
+
+
+{
+  query {
+    extrinsics(
+      filter: {
+        section: {
+          equalTo: "utility"
+        }
+        method: {
+          equalTo: "batch"
+        }
+      }
+    ) {
+      nodes {
+        block {
+          number
+        }
+        id
+        method
+        section
+        args
+        signature
+      }
+    }
+  }
+}
+
+
+"block": {
+  "number": "8721145"
+},
+"id": "0x00422f2033a2431c866fdb358acec188f1b9e93a19a6ebcc8bb3ff6d54e08667",
+"method": "batch",
+"section": "utility",
+"args": "[
+  {
+    "name":"calls",
+    "type":"Vec<Call>",
+    "value":[
+      {
+        "args":{
+          "dest":{
+            "Id":"15VKUDU7Rbom4pD45UWWhVGtoXgeVG6LjkDRJkH6ZbqmfzxF"
+          },
+          "value":"568,000,000,000"\
+        },
+        "method":"transferKeepAlive",
+        "section":"balances"
+      }
+    ]
+  }
+]",
+"signature": "0xfb253b7362136e6e354a8721edafea2b022922a16c16c71d7105fe6d6d83cd6cada533f92684fc0a346251b3a1a4b74890407f6dca557eff17ee79678edef20b"
+          
+
+"block": {
+  "number": "8721907"
+},
+"id": "0x061da457296f1ab02060e45d6cd23fb9df28e3d6087ab56bc53a89826ee384db",
+"method": "batch",
+"section": "utility",
+"args": "[{"name":"calls","type":"Vec<Call>","value":[{"args":{"dest":{"Id":"164tA3YCNcqBViBBAezxg3s5Rkhz3p7nb2644ie6QRfd2RSK"},"value":"1,041,400,000,000"},"method":"transfer","section":"balances"}]}]",
+"signature": "0x620802d2a65fccaff8a58d471e72a381fea97be046e44734eaa7aa1d806ae3626f5bdcd537d6286f39cf94f4e541af9a375a0432aa593b12e2b2ca51e4e42085"
+
+{
+  name: string;
+  type: Vec<Call>
+  value: [
+    {
+      args: {
+        dest: {
+          Id: string
+        }
+        value: string
+      }
+      method: string
+      section: string
+    }
+  ]
 }
