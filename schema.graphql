@@ -111,11 +111,11 @@ type Transfer @entity {
 # here callNumber is call index
 type CallRecord @entity {
   id: ID! # callNumber-extrinsicIdx
-  index: Int!
-  module: String!
-  name: String!
-  paramDestId: String!
-  paramValue: BigInt!
+  index: Int
+  module: String
+  name: String
+  paramDestId: String
+  paramValue: BigInt
 
   # batchRecord: BatchRecord
 }
@@ -123,10 +123,10 @@ type CallRecord @entity {
 type BatchRecord @entity {
   id: ID! # blockHeight-callNumber-extrinsicIdx
   extrinsicHash: String
-  status: BatchStatus!
-  module: String! # utility
-  method: String! # batch
-  timestamp: Date!
+  status: BatchStatus
+  module: String # utility
+  method: String # batch
+  timestamp: Date
   confirmExtrinsicIdx: String
   cancelExtrinsicIdx: String
   signature: String

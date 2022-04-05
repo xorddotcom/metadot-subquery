@@ -11,7 +11,7 @@ import { ensureExtrinsic } from "./extrinsic";
 interface Value {
   args: {
     dest: {
-      Id: string;
+      id: string;
     };
     value: bigint;
   };
@@ -48,7 +48,7 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
   const signature = event.extrinsic?.extrinsic.signature.toString();
   const extrinsicRecord = await Extrinsic.get(extrinsicHash);
   const args: Arg[] = JSON.parse(extrinsicRecord.args);
-
+  logger.info("args -->"+ extrinsicRecord.args)
   for (let i = 0; i < args.length; i++) {
     if (args[i].name === "calls") {
       const values: Value[] = args[i].value;
@@ -56,23 +56,25 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
         const index: number = j;
         const value: Value = values[index];
 
-        if (value.section !== "balances") return;
-        if (value.method != "transfer") return;
+        if(!value.args.dest) break
+        logger.info("value --->"+ JSON.stringify(value))
 
         const {
           args: {
-            dest: { Id: paramDestId },
+            dest: { id: paramDestId },
             value: paramValue,
           },
           method,
           section,
         } = value;
-
         // ids
         const callId = `${index}-${event.extrinsic.idx}`;
         const batchRecordId = `${blockNumber}-${callId}`;
 
         // save new batch record
+        logger.info("section--->"+ section)
+        logger.info("method--->"+ method)
+
         const batchRecord = new BatchRecord(batchRecordId);
         batchRecord.extrinsicHash = extrinsicHash;
         batchRecord.module = section;
@@ -98,12 +100,13 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
         await batchRecord.save();
 
         // create new call
+        logger.info("id --->"+ callId)
         const call = new CallRecord(callId);
         call.index = index;
         call.module = section;
         call.name = method;
         call.paramDestId = paramDestId;
-        call.paramValue = ((paramValue as unknown) as Balance).toBigInt();
+        call.paramValue = paramValue
         // call.paramValue = paramValue.toString();
 
         // await ensureBatchRecord(batchRecordId);

@@ -60,6 +60,8 @@ export async function eventHandler(
     await entity.save();
 
     // BATCH
+    logger.info("section --->" + section)
+    logger.info("method --->"+ method)
     if (section === "utility" && (method === "BatchCompleted" || method === "BatchInterrupted")) {
       await batchHandler(event);
     }
