@@ -48,66 +48,68 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
   const signature = event.extrinsic?.extrinsic.signature.toString();
   const extrinsicRecord = await Extrinsic.get(extrinsicHash);
   const args: Arg[] = JSON.parse(extrinsicRecord.args);
-  logger.info("args -->"+ extrinsicRecord.args)
+  logger.info("args -->" + extrinsicRecord.args);
+
   for (let i = 0; i < args.length; i++) {
     if (args[i].name === "calls") {
       const values: Value[] = args[i].value;
+
+      const method = "transfer";
+      const section = "balances";
+
+      // create batch
+      const batchRecordId = `${blockNumber}-${extrinsicHash}`;
+      const batchRecord = new BatchRecord(batchRecordId);
+      batchRecord.extrinsicHash = extrinsicHash;
+      batchRecord.module = section;
+      batchRecord.method = method;
+      batchRecord.timestamp = timestamp;
+      batchRecord.signature = signature;
+
+      // conditional for 'BatchCompleted' and 'BatchInterrupted'
+      if (event.event.method === "BatchCompleted") {
+        batchRecord.status = BatchStatus.completed;
+        batchRecord.confirmExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
+      }
+
+      if (event.event.method === "BatchInterrupted") {
+        batchRecord.status = BatchStatus.interrupted;
+        batchRecord.cancelExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
+      }
+
+      batchRecord.senderId = signer;
+      batchRecord.blockId = blockId;
+      batchRecord.extrinsicsId = extrinsicHash;
+
+      await batchRecord.save();
+
       for (let j = 0; j < values.length; j++) {
         const index: number = j;
         const value: Value = values[index];
 
-        if(!value.args.dest) break
-        logger.info("value --->"+ JSON.stringify(value))
+        // check if transfer otherwise break
+        if (!value.args.dest) break;
+        logger.info("value --->" + JSON.stringify(value));
 
         const {
           args: {
             dest: { id: paramDestId },
             value: paramValue,
           },
-          method,
-          section,
+          // method,
+          // section,
         } = value;
-        // ids
-        const callId = `${index}-${event.extrinsic.idx}`;
-        const batchRecordId = `${blockNumber}-${callId}`;
-
-        // save new batch record
-        logger.info("section--->"+ section)
-        logger.info("method--->"+ method)
-
-        const batchRecord = new BatchRecord(batchRecordId);
-        batchRecord.extrinsicHash = extrinsicHash;
-        batchRecord.module = section;
-        batchRecord.method = method;
-        batchRecord.timestamp = timestamp;
-        batchRecord.signature = signature;
-
-        // conditional for 'BatchCompleted' and 'BatchInterrupted'
-        if (event.event.method === "BatchCompleted") {
-          batchRecord.status = BatchStatus.completed;
-          batchRecord.confirmExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
-        }
-
-        if (event.event.method === "BatchInterrupted") {
-          batchRecord.status = BatchStatus.interrupted;
-          batchRecord.cancelExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
-        }
-
-        batchRecord.senderId = signer;
-        batchRecord.blockId = blockId;
-        batchRecord.extrinsicsId = extrinsicHash;
-
-        await batchRecord.save();
 
         // create new call
-        logger.info("id --->"+ callId)
+        const callId = `${index}-${event.extrinsic.idx}`;
+        logger.info("id --->" + callId);
+
         const call = new CallRecord(callId);
         call.index = index;
         call.module = section;
         call.name = method;
         call.paramDestId = paramDestId;
-        call.paramValue = paramValue
-        // call.paramValue = paramValue.toString();
+        call.paramValue = paramValue;
 
         // await ensureBatchRecord(batchRecordId);
         // call.batchRecordId = batchRecordId;

@@ -121,7 +121,7 @@ type CallRecord @entity {
 }
 
 type BatchRecord @entity {
-  id: ID! # blockHeight-callNumber-extrinsicIdx
+  id: ID! # blockHeight-extrinsicHash
   extrinsicHash: String
   status: BatchStatus
   module: String # utility
