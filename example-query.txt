@@ -351,6 +351,7 @@
         confirmExtrinsicIdx
         cancelExtrinsicIdx
         signature
+        callsStringArray
         calls {
           nodes {
             id
@@ -359,6 +360,59 @@
             name
             paramDestId
             paramValue
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+{
+  query{
+    accounts(
+      filter:{
+        id:{
+          equalTo: "12e3sh6RZqWEm1h84zBBetRaFY9zBUQSRJJZP2zQYamAPtX5"
+        }
+      }
+    ) {
+      nodes {
+        id
+        transferTotalCount
+        transferTo {
+          nodes {
+            id
+          }
+        }
+        transferFrom {
+          nodes {
+            id
+          }
+        }
+        batchTransfers {
+          nodes {
+            id
+            extrinsicHash
+            status
+            module
+            method
+            timestamp
+            confirmExtrinsicIdx
+            cancelExtrinsicIdx
+            signature
+            callsStringArray
+            calls {
+              nodes {
+                id
+                index
+                module
+                name
+                paramDestId
+                paramValue
+              }
+            }
           }
         }
       }

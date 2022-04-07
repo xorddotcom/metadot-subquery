@@ -92,6 +92,7 @@ type Account @entity {
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
   transferFrom: [Transfer!]! @derivedFrom(field: "from")
   transferTo: [Transfer!]! @derivedFrom(field: "to")
+  batchTransfers: [BatchRecord!]! @derivedFrom(field: "sender")
 }
 
 type Transfer @entity {
@@ -117,7 +118,7 @@ type CallRecord @entity {
   paramDestId: String
   paramValue: BigInt
 
-  batch: BatchRecord
+  batch: BatchRecord!
 }
 
 type BatchRecord @entity {
@@ -135,5 +136,5 @@ type BatchRecord @entity {
   block: Block # create relation to Block
   extrinsics: Extrinsic # create relation to Extrinsic
   callsStringArray: [String]
-  calls: [CallRecord] @derivedFrom(field: "batch")
+  calls: [CallRecord!]! @derivedFrom(field: "batch")
 }
