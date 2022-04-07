@@ -319,3 +319,49 @@
     }
   ]
 }
+
+
+
+
+
+
+{
+  query {  
+    callRecords {
+      nodes {
+        id
+        index
+        module
+        name
+        paramDestId
+        paramValue
+        batch {
+          id
+        }
+      }
+    }
+    batchRecords {
+      nodes {
+        id
+        extrinsicHash
+        status
+        module
+        method
+        timestamp
+        confirmExtrinsicIdx
+        cancelExtrinsicIdx
+        signature
+        calls {
+          nodes {
+            id
+            index
+            module
+            name
+            paramDestId
+            paramValue
+          }
+        }
+      }
+    }
+  }
+}

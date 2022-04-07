@@ -34,12 +34,12 @@ export async function handleExtrinsic(
   const method = extrinsic?.extrinsic.method.method;
   const section = extrinsic?.extrinsic.method.section;
   const args = function(): string {
-    const { args, meta } = extrinsic?.extrinsic || {};
+    const { args, meta, method } = extrinsic?.extrinsic || {};
     const { args: argsDef } = meta;
     const result = args.map((arg, index) => {
       const { name, type } = argsDef[index];
 
-      return { name, type, value: arg.toJSON() };
+      return { name, type, method: method.method, section: method.section, value: arg.toJSON() };
     });
 
     return JSON.stringify(result);
