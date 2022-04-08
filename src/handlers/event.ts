@@ -5,12 +5,7 @@ import { Event } from "../types";
 import { batchHandler } from "./batch";
 import { ensureBlock } from "./block";
 import { handleExtrinsic } from "./extrinsic";
-import {
-  approveMultisigHandler,
-  cancelledMultisigHandler,
-  executedMultisigHandler,
-  newMultisigHandler,
-} from "./multisig";
+import { multisigHandler } from "./multisig";
 import { transferHandler } from "./transfer";
 
 export async function eventHandler(
@@ -62,28 +57,17 @@ export async function eventHandler(
     // BATCH
     // logger.info("section --->" + section)
     // logger.info("method --->"+ method)
-    if (section === "utility" && method === "BatchCompleted") {
+    if (
+      (section === "utility" && method === "BatchCompleted") ||
+      (section === "utility" && method === "BatchInterrupted")
+    ) {
       // batchCompletedHandler
-      await batchHandler(event);
-    }
-    if (section === "utility" && method === "BatchInterrupted") {
       // batchInterruptedHandler
       await batchHandler(event);
     }
 
     // MULTISIG
-    if (section === "multisig" && method === "NewMultisig") {
-      await newMultisigHandler(event);
-    }
-    if (section === "multisig" && method === "MultisigApproval") {
-      await approveMultisigHandler(event);
-    }
-    if (section === "multisig" && method === "MultisigExecuted") {
-      await executedMultisigHandler(event);
-    }
-    if (section === "multisig" && method === "MultisigCancelled") {
-      await cancelledMultisigHandler(event);
-    }
+    if (section === "multisig") await multisigHandler(event);
 
     // TRANSFER
     if (section === "balances" && method === "Transfer") {

@@ -1,5 +1,4 @@
 import { Vec } from "@polkadot/types";
-import { Balance } from "@polkadot/types/interfaces";
 import { Call as CallType } from "@polkadot/types/interfaces/runtime";
 import { SubstrateEvent } from "@subql/types";
 

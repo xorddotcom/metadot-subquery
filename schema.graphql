@@ -23,90 +23,93 @@ type Block @entity {
 type Extrinsic @entity {
   id: ID! # extrinsic hash
   args: String
-  method: String
-  nonce: BigInt
   isSigned: Boolean
   isSuccess: Boolean
+  method: String
+  nonce: BigInt
   section: String
   signature: String
   timestamp: Date
   tip: BigInt
-  signer: Account # create relation to Account
-  block: Block # create relation to block
+
+  block: Block
+  signer: Account
   events: [Event] @derivedFrom(field: "extrinsic")
 }
 
 type Event @entity {
   id: ID! # blockNumber-eventIdx
-  index: Int!
-  section: String!
-  method: String!
   data: String!
+  index: Int!
+  method: String!
+  section: String!
   timestamp: Date
 
-  block: Block # create relation to block
-  extrinsic: Extrinsic # create relation to extrinsic
+  block: Block
+  extrinsic: Extrinsic
 }
 
 type MultisigAccount @entity {
   id: ID! # multisigAccountId (address)
-  threshold: Int!
   members: [String!]!
+  threshold: Int!
 
   record: [MultisigRecord] @derivedFrom(field: "multisigAccount")
 }
 
 type MultisigRecord @entity {
-  id: ID! # multisigAccountId-blockHeight-extrinsicIdx
-  createExtrinsicIdx: String! # blockHeight-extrinsicIdx
-  module: String!
-  method: String!
-  multisigAccount: MultisigAccount!
-  timestamp: Date
-  block: Block!
-  confirmBlock: Block
-  status: ApproveStatus! # default/cancelled/confirmed
+  id: ID! # multisigAccountId-blockNumber-extrinsicIdx
+  approvals: [String!]
+  createExtrinsicIdx: String! # blockNumber-extrinsicIdx
   confirmExtrinsicIdx: String
   cancelExtrinsicIdx: String
-  approvals: [String!]
+  module: String!
+  method: String!
+  timestamp: Date
+
+  status: ApproveStatus! # default/cancelled/confirmed
+  multisigAccount: MultisigAccount!
+  block: Block!
+  confirmBlock: Block
 }
 
 type ApproveRecord @entity {
-  id: ID! # accountId-blockHeight-extrinsicIdx
+  id: ID! # accountId-blockNumber-extrinsicIdx
   account: String! # approve account address
-  multisigRecord: MultisigRecord!
   callHash: String!
+
+  multisigRecord: MultisigRecord!
 }
 
 type Token @entity {
   id: ID!
 
-  name: String
   decimals: BigInt!
+  name: String
 }
 
 type Account @entity {
   id: ID! # accountId
   transferTotalCount: Int
 
+  batchTransfers: [BatchRecord!]! @derivedFrom(field: "sender")
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
   transferFrom: [Transfer!]! @derivedFrom(field: "from")
   transferTo: [Transfer!]! @derivedFrom(field: "to")
-  batchTransfers: [BatchRecord!]! @derivedFrom(field: "sender")
 }
 
 type Transfer @entity {
   id: ID! # blockNumber-eventIdx
+  amount: BigInt!
+  extrinsicHash: String
+  fees: BigInt!
+  status: Boolean!
+  timestamp: Date!
+
+  block: Block
   from: Account!
   to: Account!
   token: Token
-  amount: BigInt!
-  timestamp: Date!
-  extrinsicHash: String
-  status: Boolean!
-  fees: BigInt!
-
-  block: Block # create relation to Block
 }
 
 # here callNumber is call index
@@ -122,19 +125,19 @@ type CallRecord @entity {
 }
 
 type BatchRecord @entity {
-  id: ID! # blockHeight-extrinsicHash
-  extrinsicHash: String
-  status: BatchStatus
-  module: String # utility
-  method: String # batch
-  timestamp: Date
+  id: ID! # blockNumber-extrinsicHash
   confirmExtrinsicIdx: String
   cancelExtrinsicIdx: String
+  extrinsicHash: String
+  module: String # utility
+  method: String # batch
   signature: String
+  timestamp: Date
 
-  sender: Account!
-  block: Block # create relation to Block
-  extrinsics: Extrinsic # create relation to Extrinsic
+  block: Block
   callsStringArray: [String]
+  extrinsics: Extrinsic
+  status: BatchStatus # completed/interrupted
+  sender: Account!
   calls: [CallRecord!]! @derivedFrom(field: "batch")
 }
