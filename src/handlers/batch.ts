@@ -47,9 +47,6 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
   const signature = event.extrinsic?.extrinsic.signature.toString();
   const extrinsicRecord = await Extrinsic.get(extrinsicHash);
   const args: Arg[] = JSON.parse(extrinsicRecord.args);
-  // logger.info("args -->" + extrinsicRecord.args);
-  // logger.info("extrinsicRecord.method >>> " + extrinsicRecord.method);
-  // logger.info("extrinsicRecord.section >>> " + extrinsicRecord.section);
 
   if (extrinsicRecord.section !== "utility") return;
 
@@ -67,8 +64,6 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
         hasTransfer = false;
       }
     }
-    // logger.info("hasTransfer >>> " + hasTransfer);
-    // logger.info("hasTransferCount >>> " + hasTransferCount);
     if (!hasTransfer || hasTransferCount === 0) return;
   }
 
@@ -115,7 +110,6 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
 
         // check if transfer otherwise break
         if (!value.args.dest) break;
-        // logger.info("value --->" + JSON.stringify(value));
 
         const {
           args: {
@@ -126,15 +120,6 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
 
         // create new call
         const callId = `${index}-${event.extrinsic.idx}`;
-        // logger.info("id --->" + callId);
-
-        // logger.info("index >>> " + index);
-        // logger.info("module >>> " + section);
-        // logger.info("name >>> " + method);
-        // logger.info("paramDestId >>> " + paramDestId);
-        // logger.info("typeof paramValue >>> " + typeof paramValue);
-        // logger.info("paramValue >>> " + paramValue);
-        // logger.info("batchRecordId >>> " + batchRecordId);
 
         const call = new CallRecord(callId);
         call.index = index;
@@ -150,7 +135,6 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
         recordArr.push(callId);
       }
 
-      // logger.info("recordArr >>> " + JSON.stringify(recordArr));
       batchRecord.callsStringArray = recordArr;
       await batchRecord.save();
     }
