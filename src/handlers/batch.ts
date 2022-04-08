@@ -13,7 +13,7 @@ interface Value {
     dest: {
       id: string;
     };
-    value: bigint;
+    value: string;
   };
 }
 
@@ -128,6 +128,14 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
         // create new call
         const callId = `${index}-${event.extrinsic.idx}`;
         // logger.info("id --->" + callId);
+
+        // logger.info("index >>> " + index);
+        // logger.info("module >>> " + section);
+        // logger.info("name >>> " + method);
+        // logger.info("paramDestId >>> " + paramDestId);
+        // logger.info("typeof paramValue >>> " + typeof paramValue);
+        // logger.info("paramValue >>> " + paramValue);
+        // logger.info("batchRecordId >>> " + batchRecordId);
 
         const call = new CallRecord(callId);
         call.index = index;

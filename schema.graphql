@@ -116,7 +116,7 @@ type CallRecord @entity {
   module: String
   name: String
   paramDestId: String
-  paramValue: BigInt
+  paramValue: String
 
   batch: BatchRecord!
 }
