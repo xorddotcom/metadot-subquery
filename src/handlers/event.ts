@@ -1,14 +1,12 @@
-import { SubstrateEvent } from "@subql/types";
-import { ensureExtrinsic, handleExtrinsic } from "./extrinsic";
-import {
-  checkApproveMultisig,
-  checkCancelledMultisig,
-  checkExecutedMultisig,
-  checkNewMultisig,
-} from "./multisig";
 import { EventRecord } from "@polkadot/types/interfaces";
+import { SubstrateEvent } from "@subql/types";
+
 import { Event } from "../types";
+import { batchHandler } from "./batch";
 import { ensureBlock } from "./block";
+import { handleExtrinsic } from "./extrinsic";
+import { multisigHandler } from "./multisig";
+import { transferHandler } from "./transfer";
 
 export async function eventHandler(
   event: SubstrateEvent
@@ -40,34 +38,40 @@ export async function eventHandler(
   const timestamp = event.block.timestamp;
 
   const save = async (): Promise<void> => {
-    // await ensureBlock(blockHash);
-
     const entity = new Event(id);
+
+    await ensureBlock(blockHash);
+    if (extrinsicHash) {
+      await (await handleExtrinsic(event.extrinsic)).save();
+      entity.extrinsicId = extrinsicHash;
+    }
+
     entity.index = index;
     entity.section = section;
     entity.method = method;
     entity.data = data;
     entity.timestamp = timestamp;
     entity.blockId = blockHash;
-    if (extrinsicHash) {
-      // await ensureExtrinsic(extrinsicHash);
-      const handler = await handleExtrinsic(event.extrinsic);
-      await handler.save();
-      entity.extrinsicId = extrinsicHash;
-    }
     await entity.save();
 
-    if (section === "multisig" && method === "NewMultisig") {
-      await checkNewMultisig(event);
+    // BATCH
+    // logger.info("section --->" + section)
+    // logger.info("method --->"+ method)
+    if (
+      (section === "utility" && method === "BatchCompleted") ||
+      (section === "utility" && method === "BatchInterrupted")
+    ) {
+      // batchCompletedHandler
+      // batchInterruptedHandler
+      await batchHandler(event);
     }
-    if (section === "multisig" && method === "MultisigApproval") {
-      await checkApproveMultisig(event);
-    }
-    if (section === "multisig" && method === "MultisigExecuted") {
-      await checkExecutedMultisig(event);
-    }
-    if (section === "multisig" && method === "MultisigCancelled") {
-      await checkCancelledMultisig(event);
+
+    // MULTISIG
+    if (section === "multisig") await multisigHandler(event);
+
+    // TRANSFER
+    if (section === "balances" && method === "Transfer") {
+      await transferHandler(event);
     }
   };
 

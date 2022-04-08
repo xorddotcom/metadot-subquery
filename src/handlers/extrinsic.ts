@@ -1,7 +1,9 @@
 import { SubstrateExtrinsic } from "@subql/types";
-import { ensureBlock } from "./block";
+
 import { checkIfExtrinsicExecuteSuccess } from "../helpers/extrinsic";
 import { Extrinsic } from "../types";
+import { ensureAccount } from "./account";
+import { ensureBlock } from "./block";
 
 export async function ensureExtrinsic(id: string): Promise<void> {
   const extrinsic = await Extrinsic.get(id);
@@ -32,12 +34,12 @@ export async function handleExtrinsic(
   const method = extrinsic?.extrinsic.method.method;
   const section = extrinsic?.extrinsic.method.section;
   const args = function(): string {
-    const { args, meta } = extrinsic?.extrinsic || {};
+    const { args, meta, method } = extrinsic?.extrinsic || {};
     const { args: argsDef } = meta;
     const result = args.map((arg, index) => {
       const { name, type } = argsDef[index];
 
-      return { name, type, value: arg.toHuman() };
+      return { name, type, method: method.method, section: method.section, value: arg.toJSON() };
     });
 
     return JSON.stringify(result);
@@ -55,6 +57,7 @@ export async function handleExtrinsic(
     const entity = new Extrinsic(id);
 
     await ensureBlock(blockHash);
+    await ensureAccount(signer);
 
     entity.method = method;
     entity.section = section;

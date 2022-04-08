@@ -1322,7 +1322,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subql/cli@npm:latest":
+"@subql/cli@npm:0.22.0":
   version: 0.22.0
   resolution: "@subql/cli@npm:0.22.0"
   dependencies:
@@ -1478,7 +1478,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subql/types@npm:0.14.0, @subql/types@npm:latest":
+"@subql/types@npm:0.14.0":
   version: 0.14.0
   resolution: "@subql/types@npm:0.14.0"
   peerDependencies:
@@ -3758,6 +3758,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-simple-import-sort@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "eslint-plugin-simple-import-sort@npm:7.0.0"
+  peerDependencies:
+    eslint: ">=5.0.0"
+  checksum: 6aacb7179c213cd2081950630368d1f3b1dcb4f5674d8b989fe7839e7b317ee521d74761676e8b1a7cab49f20405dbcc9aac05358ae804e6bcba6cbf1daccb3d
+  languageName: node
+  linkType: hard
+
 "eslint-scope@npm:5.1.1, eslint-scope@npm:^5.0.0":
   version: 5.1.1
   resolution: "eslint-scope@npm:5.1.1"
@@ -6022,14 +6031,15 @@ __metadata:
     "@commitlint/cli": ^16.2.3
     "@commitlint/config-conventional": ^16.2.1
     "@polkadot/api": ^7.12.1
-    "@subql/cli": latest
-    "@subql/types": latest
+    "@subql/cli": 0.22.0
+    "@subql/types": 0.14.0
     "@typescript-eslint/eslint-plugin": ^2.0.0
     "@typescript-eslint/parser": ^2.0.0
     commitizen: ^4.2.4
     cz-conventional-changelog: ^3.3.0
     eslint: ^6.2.2
     eslint-config-prettier: ^6.1.0
+    eslint-plugin-simple-import-sort: ^7.0.0
     husky: ^7.0.4
     lint-staged: ^12.3.5
     prettier: ^1.18.2

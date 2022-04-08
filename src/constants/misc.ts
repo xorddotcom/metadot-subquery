@@ -1,0 +1,1 @@
+export const DOT_RE_DENOMINATION_BLOCK = 1248328;

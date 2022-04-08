@@ -1,4 +1,5 @@
 import { SubstrateBlock } from "@subql/types";
+
 import { getBlockTimestamp } from "../helpers/block";
 import { Block } from "../types";
 
