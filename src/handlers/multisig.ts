@@ -130,10 +130,10 @@ export async function executedMultisigHandler(event: SubstrateEvent): Promise<vo
   await saveApproveRecord(accountId, multisigAccountId, timepointExtrinsicIdx, callHash);
 
   // Update multisig record.
-  const blockHeight = event.block.block.header.number;
+  const blockNumber = event.block.block.header.number;
   multisigRecord.status = ApproveStatus.confirmed;
   multisigRecord.confirmBlockId = currentBlockId;
-  multisigRecord.confirmExtrinsicIdx = `${blockHeight}-${event.extrinsic?.idx}`;
+  multisigRecord.confirmExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
   const approveRecords = await ApproveRecord.getByMultisigRecordId(multisigRecordId);
   multisigRecord.approvals = approveRecords.map(approveRecord => approveRecord.account);
   await multisigRecord.save();
@@ -158,8 +158,8 @@ export async function cancelledMultisigHandler(event: SubstrateEvent): Promise<v
   }
 
   // Update multisig record.
-  const blockHeight = event.block.block.header.number;
+  const blockNumber = event.block.block.header.number;
   multisigRecord.status = ApproveStatus.cancelled;
-  multisigRecord.cancelExtrinsicIdx = `${blockHeight}-${event.extrinsic?.idx}`;
+  multisigRecord.cancelExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
   await multisigRecord.save();
 }

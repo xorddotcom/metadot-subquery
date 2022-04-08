@@ -2,7 +2,6 @@ import { EventRecord } from "@polkadot/types/interfaces";
 import { SubstrateEvent } from "@subql/types";
 
 import { Event } from "../types";
-import { batchHandler } from "./batch";
 import { ensureBlock } from "./block";
 import { handleExtrinsic } from "./extrinsic";
 import {
@@ -11,7 +10,6 @@ import {
   executedMultisigHandler,
   newMultisigHandler,
 } from "./multisig";
-import { transferHandler } from "./transfer";
 
 export async function eventHandler(
   event: SubstrateEvent
@@ -59,18 +57,6 @@ export async function eventHandler(
     entity.blockId = blockHash;
     await entity.save();
 
-    // BATCH
-    // logger.info("section --->" + section)
-    // logger.info("method --->"+ method)
-    if (section === "utility" && method === "BatchCompleted") {
-      // batchCompletedHandler
-      await batchHandler(event);
-    }
-    if (section === "utility" && method === "BatchInterrupted") {
-      // batchInterruptedHandler
-      await batchHandler(event);
-    }
-
     // MULTISIG
     if (section === "multisig" && method === "NewMultisig") {
       await newMultisigHandler(event);
@@ -83,11 +69,6 @@ export async function eventHandler(
     }
     if (section === "multisig" && method === "MultisigCancelled") {
       await cancelledMultisigHandler(event);
-    }
-
-    // TRANSFER
-    if (section === "balances" && method === "Transfer") {
-      await transferHandler(event);
     }
   };
 
