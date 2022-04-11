@@ -2,10 +2,12 @@ import { Vec } from "@polkadot/types";
 import { Call as CallType } from "@polkadot/types/interfaces/runtime";
 import { SubstrateEvent } from "@subql/types";
 
-import { BatchRecord, BatchStatus, CallRecord, Extrinsic } from "../types";
-import { ensureAccount } from "./account";
+import { getPolkadotDecimalsType, getTokenInfo, SupportedTokens } from "../constants/token";
+import { BatchRecord, BatchStatus, CallRecord, Extrinsic, Transfer } from "../types";
+import { ensureAccount, ensureAccounts, updateBatchStatistic } from "./account";
 import { ensureBlock } from "./block";
 import { ensureExtrinsic } from "./extrinsic";
+import { ensureToken } from "./token";
 
 interface Value {
   args: {
@@ -37,25 +39,27 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
   const signer = event.extrinsic?.extrinsic.signer.toString();
   const extrinsicHash = event.extrinsic?.extrinsic?.hash?.toString();
 
-  // ensure account, block, extrinsic
-  await ensureBlock(blockId);
-  await ensureAccount(signer);
-  await ensureExtrinsic(extrinsicHash);
-
   const timestamp = event.block.timestamp;
-  const blockNumber = event.block.block.header.number;
+  const blockNumber = event.block.block.header.number.toNumber();
   const signature = event.extrinsic?.extrinsic.signature.toString();
+
+  const { name, decimals } = getTokenInfo(
+    SupportedTokens.POLKADOT,
+    getPolkadotDecimalsType(blockNumber)
+  );
+  const modifiedDecimals = BigInt("1" + "0".repeat(decimals));
+
   const extrinsicRecord = await Extrinsic.get(extrinsicHash);
   const args: Arg[] = JSON.parse(extrinsicRecord.args);
 
   if (extrinsicRecord.section !== "utility") return;
 
   if (args[0].name === "calls") {
-    const values = args[0].value;
+    const values: Value[] = args[0].value;
     let hasTransfer = false;
     let hasTransferCount = 0;
     for (let k = 0; k < values.length; k++) {
-      const value = values[k];
+      const value: Value = values[k];
       // check if transfer
       if (value?.args?.dest) {
         hasTransfer = true;
@@ -65,78 +69,97 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
       }
     }
     if (!hasTransfer || hasTransferCount === 0) return;
-  }
 
-  for (let i = 0; i < args.length; i++) {
-    if (args[i].name === "calls") {
-      const values: Value[] = args[i].value;
+    // if Transfer then proceed
 
-      const method = "transfer";
-      const section = "balances";
-      // const method = args[i].method;
-      // const section = args[i].section;
+    const method = "transfer";
+    const section = "balances";
+    const batchRecordId = `${blockNumber}-${extrinsicHash}`;
 
-      // create batch
-      const batchRecordId = `${blockNumber}-${extrinsicHash}`;
-      const batchRecord = new BatchRecord(batchRecordId);
-      batchRecord.extrinsicHash = extrinsicHash;
-      batchRecord.module = section;
-      batchRecord.method = method;
-      batchRecord.timestamp = timestamp;
-      batchRecord.signature = signature;
+    // ensure connected entities
+    await ensureBlock(blockId);
+    await ensureAccount(signer);
+    await updateBatchStatistic(signer);
+    await ensureExtrinsic(extrinsicHash);
 
-      // conditional for 'BatchCompleted' and 'BatchInterrupted'
-      if (event.event.method === "BatchCompleted") {
-        batchRecord.status = BatchStatus.completed;
-        batchRecord.confirmExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
-      }
+    // create BatchRecord
+    const batchRecord = new BatchRecord(batchRecordId);
+    batchRecord.extrinsicHash = extrinsicHash;
+    batchRecord.module = section;
+    batchRecord.method = method;
+    batchRecord.timestamp = timestamp;
+    batchRecord.signature = signature;
 
-      if (event.event.method === "BatchInterrupted") {
-        batchRecord.status = BatchStatus.interrupted;
-        batchRecord.cancelExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
-      }
-
-      batchRecord.senderId = signer;
-      batchRecord.blockId = blockId;
-      batchRecord.extrinsicsId = extrinsicHash;
-      await batchRecord.save();
-
-      const recordArr: string[] = [];
-
-      // CallRecord
-      for (let j = 0; j < values.length; j++) {
-        const index: number = j;
-        const value: Value = values[index];
-
-        // check if transfer otherwise break
-        if (!value.args.dest) break;
-
-        const {
-          args: {
-            dest: { id: paramDestId },
-            value: paramValue,
-          },
-        } = value;
-
-        // create new call
-        const callId = `${index}-${event.extrinsic.idx}`;
-
-        const call = new CallRecord(callId);
-        call.index = index;
-        call.module = section;
-        call.name = method;
-        call.paramDestId = paramDestId;
-        call.paramValue = paramValue;
-
-        await ensureBatchRecord(batchRecordId);
-        call.batchId = batchRecordId;
-        await call.save();
-
-        recordArr.push(callId);
-      }
-
-      batchRecord.callsStringArray = recordArr;
-      await batchRecord.save();
+    // conditional for 'BatchCompleted' and 'BatchInterrupted'
+    if (event.event.method === "BatchCompleted") {
+      batchRecord.status = BatchStatus.completed;
+      batchRecord.confirmExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
     }
+
+    if (event.event.method === "BatchInterrupted") {
+      batchRecord.status = BatchStatus.interrupted;
+      batchRecord.cancelExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
+    }
+
+    batchRecord.senderId = signer;
+    batchRecord.blockId = blockId;
+    batchRecord.extrinsicsId = extrinsicHash;
+    await batchRecord.save();
+
+    const recordArr: string[] = [];
+    const receivers: string[] = [];
+
+    // create CallRecord
+    for (let j = 0; j < values.length; j++) {
+      const index: number = j;
+      const value: Value = values[index];
+
+      // check if transfer otherwise break
+      if (!value.args.dest) break;
+
+      const {
+        args: {
+          dest: { id: receiver },
+          value: amount,
+        },
+      } = value;
+
+      // get transfer event
+      const transferId = `${blockNumber}-${extrinsicHash}`;
+      await Transfer.remove(transferId);
+      // const transfer = await Transfer.get(transferId);
+      // logger.info("transfer extrinsic hash >>> " + transfer.extrinsicHash);
+
+      // create new call
+      const callId = `${index}-${event.extrinsic.idx}`;
+
+      await ensureBlock(blockId);
+      await ensureBatchRecord(batchRecordId);
+      await ensureAccounts([receiver, signer]);
+      await ensureToken(name, modifiedDecimals);
+
+      const call = new CallRecord(callId);
+      call.amount = amount;
+      call.extrinsicHash = extrinsicHash;
+      // logger.info("call extrinsic hash >>> " + extrinsicHash);
+      call.index = index;
+      call.module = section;
+      call.name = method;
+      call.timestamp = timestamp;
+      call.blockId = blockId;
+      call.batchId = batchRecordId;
+      call.receiverId = receiver;
+      call.senderId = signer;
+      call.tokenId = name;
+
+      await call.save();
+
+      recordArr.push(callId);
+      receivers.push(receiver);
+    }
+
+    batchRecord.callsStringArray = recordArr;
+    batchRecord.receivers = receivers;
+    await batchRecord.save();
   }
 }

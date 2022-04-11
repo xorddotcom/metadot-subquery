@@ -91,15 +91,17 @@ type Token @entity {
 type Account @entity {
   id: ID! # accountId
   transferTotalCount: Int
+  batchTotalCount: Int
 
-  batchTransfers: [BatchRecord!]! @derivedFrom(field: "sender")
+  batchTransfersTo: [CallRecord] @derivedFrom(field: "receiver")
+  batchTransfersFrom: [CallRecord] @derivedFrom(field: "sender")
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
   transferFrom: [Transfer!]! @derivedFrom(field: "from")
   transferTo: [Transfer!]! @derivedFrom(field: "to")
 }
 
 type Transfer @entity {
-  id: ID! # blockNumber-eventIdx
+  id: ID! # blockNumber-extrinsicHash
   amount: BigInt!
   extrinsicHash: String
   fees: BigInt!
@@ -115,27 +117,33 @@ type Transfer @entity {
 # here callNumber is call index
 type CallRecord @entity {
   id: ID! # callNumber-extrinsicIdx
+  amount: String
+  extrinsicHash: String
   index: Int
   module: String
   name: String
-  paramDestId: String
-  paramValue: String
+  timestamp: Date!
 
+  block: Block
   batch: BatchRecord!
+  receiver: Account
+  sender: Account
+  token: Token
 }
 
 type BatchRecord @entity {
   id: ID! # blockNumber-extrinsicHash
   confirmExtrinsicIdx: String
   cancelExtrinsicIdx: String
+  callsStringArray: [String]
   extrinsicHash: String
   module: String # utility
   method: String # batch
+  receivers: [String]
   signature: String
   timestamp: Date
 
   block: Block
-  callsStringArray: [String]
   extrinsics: Extrinsic
   status: BatchStatus # completed/interrupted
   sender: Account!

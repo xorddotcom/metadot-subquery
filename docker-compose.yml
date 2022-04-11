@@ -33,6 +33,7 @@ services:
       - --db-schema=app
       - --log-level=debug
       - --batch-size=100
+      - --force-clean
     healthcheck:
       test: ["CMD", "curl", "-f", "http://subquery-node:3000/ready"]
       interval: 3s

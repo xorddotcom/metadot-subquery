@@ -25,7 +25,7 @@ network:
 dataSources:
   - kind: substrate/Runtime
     # startBlock: 1
-    startBlock: 8719668 # Polkadot
+    startBlock: 9827300 # Polkadot
     # startBlock: 10340000 # Kusama
     # startBlock: 10319310 # Westend
     mapping:

@@ -6,6 +6,7 @@ export async function ensureAccount(id: string): Promise<Account> {
   if (!account) {
     const acc = new Account(id);
     acc.transferTotalCount = 0;
+    acc.batchTotalCount = 0;
     acc.save();
 
     return acc;
@@ -45,5 +46,17 @@ export async function updateTransferStatistic(id: string): Promise<void> {
 export async function updateTransferStatistics(ids: string[]): Promise<void> {
   for (const id of ids) {
     await updateTransferStatistic(id);
+  }
+}
+
+export async function updateBatchStatistic(id: string): Promise<void> {
+  const account = await getAccountById(id);
+
+  await updateAccount(id, { batchTotalCount: account.batchTotalCount + 1 });
+}
+
+export async function updateBatchStatistics(ids: string[]): Promise<void> {
+  for (const id of ids) {
+    await updateBatchStatistic(id);
   }
 }

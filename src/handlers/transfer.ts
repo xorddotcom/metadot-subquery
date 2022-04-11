@@ -37,7 +37,7 @@ export async function transferHandler(event: SubstrateEvent): Promise<void> {
   // ensure block
   await ensureBlock(blockId);
 
-  const entity = new Transfer(`${blockNumber}-${event.idx}`);
+  const entity = new Transfer(`${blockNumber}-${extrinsicHash}`);
   entity.fromId = from;
   entity.toId = to;
   entity.tokenId = name;
