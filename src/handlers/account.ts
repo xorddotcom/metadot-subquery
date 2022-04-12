@@ -1,4 +1,4 @@
-import { Account } from "../types";
+import { Account, BatchRecord } from "../types";
 
 export async function ensureAccount(id: string): Promise<Account> {
   const account = await Account.get(id);
@@ -27,7 +27,7 @@ export async function getAccountById(id: string): Promise<Account> {
   return account;
 }
 
-export async function updateAccount(id: string, data: Record<string, number>): Promise<void> {
+export async function updateAccount(id: string, data: Record<string, any>): Promise<void> {
   const account = await getAccountById(id);
 
   Object.entries(data).forEach(([key, value]) => {
@@ -58,5 +58,16 @@ export async function updateBatchStatistic(id: string): Promise<void> {
 export async function updateBatchStatistics(ids: string[]): Promise<void> {
   for (const id of ids) {
     await updateBatchStatistic(id);
+  }
+}
+
+
+export async function updateBatchToAccount(id:string): Promise<void> {
+  const record = await BatchRecord.get(id)
+  const sender = record.sender;
+  const receivers = record.receivers;
+  const ids = [...receivers,sender]
+  for (const id of ids){
+    await updateAccount(id,{batchTransfers: record.id})
   }
 }

@@ -88,13 +88,34 @@ type Token @entity {
   name: String
 }
 
+type BatchRecord @entity {
+  id: ID! # blockNumber-extrinsicHash
+  confirmExtrinsicIdx: String
+  cancelExtrinsicIdx: String
+  callsStringArray: [String]
+  extrinsicHash: String
+  module: String # utility
+  method: String # batch
+  receivers: [String]
+  signature: String
+  timestamp: Date
+
+  block: Block
+  # extrinsics: Extrinsic
+  status: BatchStatus # completed/interrupted
+  sender: String!
+  calls: [CallRecord!]! @derivedFrom(field: "batch")
+}
+
+
 type Account @entity {
   id: ID! # accountId
   transferTotalCount: Int
   batchTotalCount: Int
 
-  batchTransfersTo: [CallRecord] @derivedFrom(field: "receiver")
-  batchTransfersFrom: [CallRecord] @derivedFrom(field: "sender")
+  # batchTransfersTo: [CallRecord] @derivedFrom(field: "receiver")
+  # batchTransfersFrom: [CallRecord] @derivedFrom(field: "sender")
+  batchTransfers: [BatchRecord]
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
   transferFrom: [Transfer!]! @derivedFrom(field: "from")
   transferTo: [Transfer!]! @derivedFrom(field: "to")
@@ -131,21 +152,3 @@ type CallRecord @entity {
   token: Token
 }
 
-type BatchRecord @entity {
-  id: ID! # blockNumber-extrinsicHash
-  confirmExtrinsicIdx: String
-  cancelExtrinsicIdx: String
-  callsStringArray: [String]
-  extrinsicHash: String
-  module: String # utility
-  method: String # batch
-  receivers: [String]
-  signature: String
-  timestamp: Date
-
-  block: Block
-  extrinsics: Extrinsic
-  status: BatchStatus # completed/interrupted
-  sender: Account!
-  calls: [CallRecord!]! @derivedFrom(field: "batch")
-}
