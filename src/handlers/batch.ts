@@ -4,7 +4,12 @@ import { SubstrateEvent } from "@subql/types";
 
 import { getPolkadotDecimalsType, getTokenInfo, SupportedTokens } from "../constants/token";
 import { BatchRecord, BatchStatus, CallRecord, Extrinsic, Transfer } from "../types";
-import { ensureAccount, ensureAccounts, updateBatchStatistic, updateBatchToAccount } from "./account";
+import {
+  ensureAccount,
+  ensureAccounts,
+  updateBatchStatistic,
+  updateBatchToAccount,
+} from "./account";
 import { ensureBlock } from "./block";
 import { ensureExtrinsic } from "./extrinsic";
 import { ensureToken } from "./token";
@@ -161,6 +166,6 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
     batchRecord.callsStringArray = recordArr;
     batchRecord.receivers = receivers;
     await batchRecord.save();
-    await updateBatchToAccount(batchRecordId)
+    await updateBatchToAccount(batchRecordId);
   }
 }

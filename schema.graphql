@@ -107,7 +107,6 @@ type BatchRecord @entity {
   calls: [CallRecord!]! @derivedFrom(field: "batch")
 }
 
-
 type Account @entity {
   id: ID! # accountId
   transferTotalCount: Int
@@ -117,8 +116,8 @@ type Account @entity {
   # batchTransfersFrom: [CallRecord] @derivedFrom(field: "sender")
   batchTransfers: [BatchRecord]
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
-  transferFrom: [Transfer!]! @derivedFrom(field: "from")
-  transferTo: [Transfer!]! @derivedFrom(field: "to")
+  transferFrom: [Transfer] @derivedFrom(field: "from")
+  transferTo: [Transfer] @derivedFrom(field: "to")
 }
 
 type Transfer @entity {
@@ -151,4 +150,3 @@ type CallRecord @entity {
   sender: Account
   token: Token
 }
-

@@ -61,13 +61,12 @@ export async function updateBatchStatistics(ids: string[]): Promise<void> {
   }
 }
 
-
-export async function updateBatchToAccount(id:string): Promise<void> {
-  const record = await BatchRecord.get(id)
+export async function updateBatchToAccount(id: string): Promise<void> {
+  const record = await BatchRecord.get(id);
   const sender = record.sender;
   const receivers = record.receivers;
-  const ids = [...receivers,sender]
-  for (const id of ids){
-    await updateAccount(id,{batchTransfers: record.id})
+  const ids = [...receivers, sender];
+  for (const id of ids) {
+    await updateAccount(id, { batchTransfers: record.id });
   }
 }
