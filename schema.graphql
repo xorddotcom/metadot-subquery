@@ -103,7 +103,7 @@ type BatchRecord @entity {
   block: Block
   # extrinsics: Extrinsic
   status: BatchStatus # completed/interrupted
-  sender: String!
+  sender: String
   calls: [CallRecord!]! @derivedFrom(field: "batch")
 }
 
