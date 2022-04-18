@@ -96,15 +96,21 @@ type BatchRecord @entity {
   extrinsicHash: String
   module: String # utility
   method: String # batch
-  receivers: [String]
   signature: String
   timestamp: Date
 
   block: Block
   # extrinsics: Extrinsic
   status: BatchStatus # completed/interrupted
-  sender: String
+  sender: Account
   calls: [CallRecord!]! @derivedFrom(field: "batch")
+  receivers: [BatchRecordReceiver] @derivedFrom(field: "batch")
+}
+
+type BatchRecordReceiver @entity {
+  id: ID! # combine id of batch and account id
+  receiver: Account
+  batch: BatchRecord
 }
 
 type Account @entity {
@@ -112,9 +118,11 @@ type Account @entity {
   transferTotalCount: Int
   batchTotalCount: Int
 
+  batchRecordsTo: [BatchRecordReceiver] @derivedFrom(field: "receiver")
+  batchRecordsFrom: [BatchRecord] @derivedFrom(field: "sender")
   # batchTransfersTo: [CallRecord] @derivedFrom(field: "receiver")
   # batchTransfersFrom: [CallRecord] @derivedFrom(field: "sender")
-  batchTransfers: [BatchRecord]
+  # batchTransfers: [BatchRecord]
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
   transferFrom: [Transfer] @derivedFrom(field: "from")
   transferTo: [Transfer] @derivedFrom(field: "to")

@@ -3,13 +3,15 @@ import { Call as CallType } from "@polkadot/types/interfaces/runtime";
 import { SubstrateEvent } from "@subql/types";
 
 import { getPolkadotDecimalsType, getTokenInfo, SupportedTokens } from "../constants/token";
-import { BatchRecord, BatchStatus, CallRecord, Extrinsic, Transfer } from "../types";
 import {
-  ensureAccount,
-  ensureAccounts,
-  updateBatchStatistic,
-  updateBatchToAccount,
-} from "./account";
+  BatchRecord,
+  BatchStatus,
+  CallRecord,
+  Extrinsic,
+  Transfer,
+  BatchRecordReceiver,
+} from "../types";
+import { ensureAccount, ensureAccounts, updateBatchStatistic } from "./account";
 import { ensureBlock } from "./block";
 import { ensureExtrinsic } from "./extrinsic";
 import { ensureToken } from "./token";
@@ -36,6 +38,14 @@ export async function ensureBatchRecord(id: string): Promise<void> {
 
   if (!entity) {
     await new BatchRecord(id).save();
+  }
+}
+
+export async function ensureBatchRecordReceiver(id: string): Promise<void> {
+  const entity = await BatchRecordReceiver.get(id);
+
+  if (!entity) {
+    await new BatchRecordReceiver(id).save();
   }
 }
 
@@ -106,7 +116,7 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
       batchRecord.cancelExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
     }
 
-    batchRecord.sender = signer;
+    batchRecord.senderId = signer;
     batchRecord.blockId = blockId;
     // batchRecord.extrinsicsId = extrinsicHash;
     await batchRecord.save();
@@ -143,6 +153,12 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
       await ensureAccounts([receiver, signer]);
       await ensureToken(name, modifiedDecimals);
 
+      // create batch record receiver entity
+      const batchRecordReceiver = new BatchRecordReceiver(`${batchRecordId}-${receiver}`);
+      batchRecordReceiver.receiverId = receiver;
+      batchRecordReceiver.batchId = batchRecordId;
+      await batchRecordReceiver.save();
+
       const call = new CallRecord(callId);
       call.amount = amount;
       call.extrinsicHash = extrinsicHash;
@@ -164,8 +180,7 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
     }
 
     batchRecord.callsStringArray = recordArr;
-    batchRecord.receivers = receivers;
     await batchRecord.save();
-    await updateBatchToAccount(batchRecordId);
+    // await updateBatchToAccount(batchRecordId);
   }
 }
