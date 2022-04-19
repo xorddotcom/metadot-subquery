@@ -76,4 +76,4 @@ export const TOKEN_INFO: TokenInfoMap = {
   },
 };
 
-export const CHAIN_TOKEN = SupportedTokens.POLKADOT;
+export const CHAIN_TOKEN = SupportedTokens.WESTEND;
