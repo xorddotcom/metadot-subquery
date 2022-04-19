@@ -41,14 +41,8 @@ export const getToken = (
   modifiedDecimals: bigint;
 } => {
   const token: SupportedTokens = CHAIN_TOKEN;
-  let name: string;
-  let decimals: number;
 
-  if (blockNumber) {
-    ({ name, decimals } = getTokenInfo(token, getPolkadotDecimalsType(blockNumber)));
-  } else {
-    ({ name, decimals } = getTokenInfo(token));
-  }
+  const { name, decimals } = getTokenInfo(token, getPolkadotDecimalsType(blockNumber));
 
   const modifiedDecimals = BigInt("1" + "0".repeat(decimals));
 
