@@ -2,14 +2,14 @@ import { Vec } from "@polkadot/types";
 import { Call as CallType } from "@polkadot/types/interfaces/runtime";
 import { SubstrateEvent } from "@subql/types";
 
-import { getPolkadotDecimalsType, getTokenInfo, SupportedTokens } from "../constants/token";
+import { SupportedTokens, getPolkadotDecimalsType, getTokenInfo } from "../constants/token";
 import {
   BatchRecord,
+  BatchRecordReceiver,
   BatchStatus,
   CallRecord,
   Extrinsic,
   Transfer,
-  BatchRecordReceiver,
 } from "../types";
 import { ensureAccount, ensureAccounts, updateBatchStatistic } from "./account";
 import { ensureBlock } from "./block";

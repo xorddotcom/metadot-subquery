@@ -292,7 +292,7 @@
   }
 ]",
 "signature": "0xfb253b7362136e6e354a8721edafea2b022922a16c16c71d7105fe6d6d83cd6cada533f92684fc0a346251b3a1a4b74890407f6dca557eff17ee79678edef20b"
-          
+
 
 "block": {
   "number": "8721907"
@@ -326,7 +326,7 @@
 
 
 {
-  query {  
+  query {
     callRecords {
       nodes {
         id
@@ -427,3 +427,56 @@ polkadot: 1qnJN7FViy3HZaxZK9tGAA71zxHSBeUweirKqCaox4t8GT7
 
 
 0x9be1124fade28f5549d274f507d74fcfd29e9c0ef94c9cda054866c7f2762d68
+
+{
+  query {
+    accounts {
+      nodes {
+        id
+        batchRecordsFrom {
+          nodes {
+            extrinsicHash
+            senderId
+            calls {
+              nodes {
+                id
+                token {
+                  id
+                  decimals
+                }
+                amount
+                receiverId
+                timestamp
+              }
+            }
+            receivers {
+              nodes {
+                id
+              }
+            }
+          }
+        }
+        batchRecordsTo {
+          nodes {
+            batch {
+              extrinsicHash
+              senderId
+              calls {
+                nodes {
+                  id
+                  token {
+                    id
+                    decimals
+                  }
+                  amount
+                  receiverId
+                  timestamp
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -13,9 +13,7 @@ export async function ensureExtrinsic(id: string): Promise<void> {
   }
 }
 
-export async function handleExtrinsic(
-  extrinsic: SubstrateExtrinsic
-): Promise<{
+export async function handleExtrinsic(extrinsic: SubstrateExtrinsic): Promise<{
   id: string;
   method: string;
   section: string;
@@ -33,7 +31,7 @@ export async function handleExtrinsic(
   const id = extrinsic?.extrinsic?.hash?.toString();
   const method = extrinsic?.extrinsic.method.method;
   const section = extrinsic?.extrinsic.method.section;
-  const args = function(): string {
+  const args = function (): string {
     const { args, meta, method } = extrinsic?.extrinsic || {};
     const { args: argsDef } = meta;
     const result = args.map((arg, index) => {

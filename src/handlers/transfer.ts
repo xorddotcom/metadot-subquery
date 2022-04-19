@@ -1,7 +1,7 @@
 import { Balance } from "@polkadot/types/interfaces";
 import { SubstrateEvent } from "@subql/types";
 
-import { getPolkadotDecimalsType, getTokenInfo, SupportedTokens } from "../constants/token";
+import { SupportedTokens, getPolkadotDecimalsType, getTokenInfo } from "../constants/token";
 import { calculateFees } from "../helpers/fees";
 import { Transfer } from "../types";
 import { ensureAccounts, updateTransferStatistics } from "./account";

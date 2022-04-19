@@ -16,7 +16,7 @@ export async function ensureMultisigAccount(
     let threshold = 0;
     let members: string[] = [];
 
-    jsonExtrinsicArgs.forEach(arg => {
+    jsonExtrinsicArgs.forEach((arg) => {
       if (arg.name === "threshold") {
         threshold = Number(arg.value);
       }
@@ -102,7 +102,7 @@ export async function approveMultisigHandler(event: SubstrateEvent): Promise<voi
   const approveRecords = await ApproveRecord.getByMultisigRecordId(
     `${multisigAccountId}-${extrinsicIdx}`
   );
-  multisigRecord.approvals = approveRecords.map(approveRecord => approveRecord.account);
+  multisigRecord.approvals = approveRecords.map((approveRecord) => approveRecord.account);
   await multisigRecord.save();
 }
 
@@ -135,7 +135,7 @@ export async function executedMultisigHandler(event: SubstrateEvent): Promise<vo
   multisigRecord.confirmBlockId = currentBlockId;
   multisigRecord.confirmExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
   const approveRecords = await ApproveRecord.getByMultisigRecordId(multisigRecordId);
-  multisigRecord.approvals = approveRecords.map(approveRecord => approveRecord.account);
+  multisigRecord.approvals = approveRecords.map((approveRecord) => approveRecord.account);
   await multisigRecord.save();
 }
 

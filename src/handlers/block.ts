@@ -11,9 +11,7 @@ export async function ensureBlock(id: string): Promise<void> {
   }
 }
 
-export async function blockHandler(
-  block: SubstrateBlock
-): Promise<{
+export async function blockHandler(block: SubstrateBlock): Promise<{
   hash: string;
   number: bigint;
   blockTimestamp: Date;
