@@ -2,7 +2,7 @@ import { Vec } from "@polkadot/types";
 import { Call as CallType } from "@polkadot/types/interfaces/runtime";
 import { SubstrateEvent } from "@subql/types";
 
-import { SupportedTokens, getPolkadotDecimalsType, getTokenInfo } from "../constants/token";
+import { getToken } from "../helpers/token";
 import {
   BatchRecord,
   BatchRecordReceiver,
@@ -58,11 +58,7 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
   const blockNumber = event.block.block.header.number.toNumber();
   const signature = event.extrinsic?.extrinsic.signature.toString();
 
-  const { name, decimals } = getTokenInfo(
-    SupportedTokens.POLKADOT,
-    getPolkadotDecimalsType(blockNumber)
-  );
-  const modifiedDecimals = BigInt("1" + "0".repeat(decimals));
+  const { name, modifiedDecimals } = getToken(blockNumber);
 
   const extrinsicRecord = await Extrinsic.get(extrinsicHash);
   const args: Arg[] = JSON.parse(extrinsicRecord.args);
