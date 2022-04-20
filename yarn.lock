@@ -5,6 +5,15 @@ __metadata:
   version: 6
   cacheKey: 8
 
+"@acala-network/type-definitions@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "@acala-network/type-definitions@npm:4.1.1"
+  dependencies:
+    "@open-web3/orml-type-definitions": ^1.0.2-4
+  checksum: 5ca560938d26640e730ffff068de9ed939d7d4ef12735b99f4c02cadfbcb72b8c38ac5952c7420942046e8ca8cb2cd43773f699e3ec75c7ad94d29ce3b829bd0
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.16.7":
   version: 7.16.7
   resolution: "@babel/code-frame@npm:7.16.7"
@@ -1112,6 +1121,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@open-web3/orml-type-definitions@npm:^1.0.2-4":
+  version: 1.1.3
+  resolution: "@open-web3/orml-type-definitions@npm:1.1.3"
+  dependencies:
+    lodash.merge: ^4.6.2
+  checksum: 6734218805c6d98f9101f89d439c87680063ab142ce9b7b540b0c6cc98eebcb0a2a009b882f2ba069131d658f89ef17d73ade3fc1acf8bfbfbda8b8f49625723
+  languageName: node
+  linkType: hard
+
 "@polkadot/api-augment@npm:7.12.1":
   version: 7.12.1
   resolution: "@polkadot/api-augment@npm:7.12.1"
@@ -1917,6 +1935,15 @@ __metadata:
   version: 1.20.4
   resolution: "@types/expect@npm:1.20.4"
   checksum: c09a9abec2c1776dd8948920dc3bad87b1206c843509d3d3002040983b1769b2e3914202a6c20b72e5c3fb5738a1ab87cb7be9d3fe9efabf2a324173b222a224
+  languageName: node
+  linkType: hard
+
+"@types/fs-extra@npm:^9.0.13":
+  version: 9.0.13
+  resolution: "@types/fs-extra@npm:9.0.13"
+  dependencies:
+    "@types/node": "*"
+  checksum: add79e212acd5ac76b97b9045834e03a7996aef60a814185e0459088fd290519a3c1620865d588fa36c4498bf614210d2a703af5cf80aa1dbc125db78f6edac3
   languageName: node
   linkType: hard
 
@@ -6384,12 +6411,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "metadot-multisig@workspace:."
   dependencies:
+    "@acala-network/type-definitions": ^4.1.1
     "@commitlint/cli": ^16.2.3
     "@commitlint/config-conventional": ^16.2.1
     "@polkadot/api": ^7.12.1
     "@subql/cli": 0.22.0
     "@subql/types": 0.14.0
     "@trivago/prettier-plugin-sort-imports": ^3.2.0
+    "@types/fs-extra": ^9.0.13
     "@typescript-eslint/eslint-plugin": ^5.20.0
     "@typescript-eslint/parser": ^5.20.0
     commander: ^6.1.0
