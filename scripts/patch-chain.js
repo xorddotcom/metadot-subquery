@@ -23,7 +23,12 @@ const NETWORK = program.network;
 const BASE_MANIFEST_PATH = path.resolve(__dirname, "../base-project.yaml");
 const MANIFEST_PATH = path.resolve(__dirname, "../project.yaml");
 
-const startBlockNumber = program.blockNumber;
+const commandlineInput = {
+  startBlockNumber: program.blockNumber,
+  genesisHash: program.genesisHash,
+  endpoint: program.endpoint,
+  dictionary: program.dictionary,
+};
 
 function readManifestFile() {
   const content = fs.readFileSync(BASE_MANIFEST_PATH, "utf-8");
@@ -37,6 +42,14 @@ function patchManifest(manifest) {
 
   if (!obj) throw Error("Network object doesnot exist in scripts/chain-config.js");
 
+  // if any commandline input is there use that otherwise the chain-config.js
+  const startBlockNumber = commandlineInput.startBlockNumber
+    ? commandlineInput.startBlockNumber
+    : obj.startBlock;
+  const genesisHash = commandlineInput.genesisHash ? commandlineInput.genesisHash : obj.genesisHash;
+  const endpoint = commandlineInput.endpoint ? commandlineInput.endpoint : obj.endpoint;
+  const dictionary = commandlineInput.dictionary ? commandlineInput.dictionary : obj.dictionary;
+
   // create chaintypes file
   fs.writeFileSync(
     path.resolve(__dirname, "../chaintypes.json"),
@@ -47,15 +60,13 @@ function patchManifest(manifest) {
   );
 
   // update start block
-  _manifest.dataSources[0].startBlock = startBlockNumber
-    ? Number(startBlockNumber)
-    : obj.startBlock;
+  _manifest.dataSources[0].startBlock = startBlockNumber;
 
   // update network details
   _manifest["network"] = {
-    genesishash: obj.genesishash,
-    endpoint: obj.endpoint,
-    dictionary: obj.dictionary,
+    genesisHash: genesisHash,
+    endpoint: endpoint,
+    dictionary: dictionary,
     chaintypes: {
       file: "./chaintypes.json",
     },
