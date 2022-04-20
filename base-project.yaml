@@ -1,0 +1,63 @@
+specVersion: 0.2.0
+name: metadot-subql
+version: 0.0.4
+description: subquery indexer for metadot
+schema:
+  file: ./schema.graphql
+network:
+  # Polkadot
+  genesisHash: "0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3"
+  endpoint: wss://rpc.polkadot.io
+  dictionary: https://api.subquery.network/sq/subquery/dictionary-polkadot
+  chaintypes:
+    file: ./chaintypes/contextfree.yaml
+dataSources:
+  - kind: substrate/Runtime
+    startBlock: 780104 # Polkadot
+    mapping:
+      file: ./dist/index.js
+      handlers:
+        - handler: handleBlock
+          kind: substrate/BlockHandler
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: multisig
+            # A new multisig operation has begun. [approving, multisig, call_hash]
+            method: NewMultisig
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: multisig
+            # A multisig operation has been approved by someone. [approving, timepoint, multisig, call_hash]
+            method: MultisigApproval
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: multisig
+            # A multisig operation has been executed. [approving, timepoint, multisig, call_hash]
+            method: MultisigExecuted
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: multisig
+            # A multisig operation has been cancelled. [cancelling, timepoint, multisig, call_hash]
+            method: MultisigCancelled
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: balances
+            method: Transfer
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: utility
+            method: BatchCompleted
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: utility
+            method: BatchInterrupted
+        # saves every extrinsic call on the chain
+        - handler: handleCall
+          kind: substrate/CallHandler

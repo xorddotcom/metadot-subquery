@@ -1,12 +1,9 @@
 specVersion: 0.2.0
-
 name: metadot-multisig
 version: 0.0.4
 description: multisig subquery for metadot
-
 schema:
   file: ./schema.graphql
-
 network:
   # Polkadot
   # genesisHash: "0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3"
@@ -46,7 +43,6 @@ network:
   # dictionary: https://api.subquery.network/sq/subquery/contextfree-dictionary
   # chaintypes:
   #   file: ./chaintypes/contextfree.yaml
-
 dataSources:
   - kind: substrate/Runtime
     # startBlock: 1
