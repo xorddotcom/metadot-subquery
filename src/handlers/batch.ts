@@ -6,6 +6,7 @@ import { getToken } from "../helpers/token";
 import {
   BatchRecord,
   BatchRecordReceiver,
+  BatchRecordSender,
   BatchStatus,
   CallRecord,
   Extrinsic,
@@ -46,6 +47,14 @@ export async function ensureBatchRecordReceiver(id: string): Promise<void> {
 
   if (!entity) {
     await new BatchRecordReceiver(id).save();
+  }
+}
+
+export async function ensureBatchRecordSender(id: string): Promise<void> {
+  const entity = await BatchRecordSender.get(id);
+
+  if (!entity) {
+    await new BatchRecordSender(id).save();
   }
 }
 
@@ -112,7 +121,6 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
       batchRecord.cancelExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
     }
 
-    batchRecord.senderId = signer;
     batchRecord.blockId = blockId;
     // batchRecord.extrinsicsId = extrinsicHash;
     await batchRecord.save();
@@ -155,6 +163,12 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
       batchRecordReceiver.batchId = batchRecordId;
       await batchRecordReceiver.save();
 
+      // create batch record receiver entity
+      const batchRecordSender = new BatchRecordSender(`${batchRecordId}-${signer}`);
+      batchRecordSender.senderId = signer;
+      batchRecordSender.batchId = batchRecordId;
+      await batchRecordSender.save();
+
       const call = new CallRecord(callId);
       call.amount = amount;
       call.extrinsicHash = extrinsicHash;
@@ -177,6 +191,5 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
 
     batchRecord.callsStringArray = recordArr;
     await batchRecord.save();
-    // await updateBatchToAccount(batchRecordId);
   }
 }

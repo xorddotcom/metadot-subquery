@@ -100,10 +100,9 @@ type BatchRecord @entity {
   timestamp: Date
 
   block: Block
-  # extrinsics: Extrinsic
   status: BatchStatus # completed/interrupted
-  sender: Account
   calls: [CallRecord!]! @derivedFrom(field: "batch")
+  sender: [BatchRecordSender] @derivedFrom(field: "batch")
   receivers: [BatchRecordReceiver] @derivedFrom(field: "batch")
 }
 
@@ -113,16 +112,19 @@ type BatchRecordReceiver @entity {
   batch: BatchRecord
 }
 
+type BatchRecordSender @entity {
+  id: ID! # combine id of batch and account id
+  sender: Account
+  batch: BatchRecord
+}
+
 type Account @entity {
   id: ID! # accountId
   transferTotalCount: Int
   batchTotalCount: Int
 
   batchRecordsTo: [BatchRecordReceiver] @derivedFrom(field: "receiver")
-  batchRecordsFrom: [BatchRecord] @derivedFrom(field: "sender")
-  # batchTransfersTo: [CallRecord] @derivedFrom(field: "receiver")
-  # batchTransfersFrom: [CallRecord] @derivedFrom(field: "sender")
-  # batchTransfers: [BatchRecord]
+  batchRecordsFrom: [BatchRecordSender] @derivedFrom(field: "sender")
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
   transferFrom: [Transfer] @derivedFrom(field: "from")
   transferTo: [Transfer] @derivedFrom(field: "to")
