@@ -70,8 +70,11 @@ function patchManifest(manifest) {
   _manifest["network"] = {
     genesisHash: genesisHash,
     endpoint: endpoint,
-    dictionary: dictionary,
   };
+
+  if (dictionary) {
+    _manifest["network"].dictionary = dictionary;
+  }
 
   if (chaintypes) {
     _manifest["network"].chaintypes.file = "./chaintypes.json";
