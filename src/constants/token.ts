@@ -1,15 +1,4 @@
-export enum SupportedTokens {
-  ASTAR,
-  ACALA,
-  CONTEXTFREE,
-  DUSTY,
-  KUSAMA,
-  KARURA,
-  POLKADOT,
-  SHIBUYA,
-  SHIDEN,
-  WESTEND,
-}
+import { SupportedChains } from "./chains";
 
 export enum OldDecimalsType {
   new,
@@ -27,53 +16,47 @@ export interface TokenInfo {
 }
 
 export type TokenInfoMap = {
-  readonly [key in SupportedTokens]: TokenInfo;
+  readonly [key in SupportedChains]: TokenInfo;
 };
 
 export const TOKEN_INFO: TokenInfoMap = {
-  [SupportedTokens.ASTAR]: {
-    name: "ASTR",
-    decimals: 18,
-  },
-  [SupportedTokens.ACALA]: {
+  [SupportedChains.ACALA]: {
     name: "ACA",
     decimals: 12,
   },
-  [SupportedTokens.CONTEXTFREE]: {
+  [SupportedChains.ASTAR]: {
+    name: "ASTR",
+    decimals: 18,
+  },
+  [SupportedChains.CONTEXTFREE]: {
     name: "CTX",
     decimals: 18,
   },
-  [SupportedTokens.DUSTY]: {
-    name: "PLD",
-    decimals: 15,
-  },
-  [SupportedTokens.KUSAMA]: {
+  [SupportedChains.KUSAMA]: {
     name: "KSM",
     decimals: 12,
   },
-  [SupportedTokens.KARURA]: {
+  [SupportedChains.KARURA]: {
     name: "KAR",
     decimals: 12,
   },
-  [SupportedTokens.POLKADOT]: {
+  [SupportedChains.POLKADOT]: {
     name: "DOT",
     decimals: {
       new: 10,
       old: 12,
     },
   },
-  [SupportedTokens.SHIBUYA]: {
+  [SupportedChains.SHIBUYA]: {
     name: "SBY",
     decimals: 18,
   },
-  [SupportedTokens.SHIDEN]: {
+  [SupportedChains.SHIDEN]: {
     name: "SDN",
     decimals: 18,
   },
-  [SupportedTokens.WESTEND]: {
+  [SupportedChains.WESTEND]: {
     name: "WND",
     decimals: 12,
   },
 };
-
-export const CHAIN_TOKEN = SupportedTokens.WESTEND;

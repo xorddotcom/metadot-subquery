@@ -1,9 +1,11 @@
-const compose = require("lodash/fp/compose");
-const yaml = require("yaml");
-const fs = require("fs");
-const path = require("path");
-const { Command } = require("commander");
-const CHAIN_CONFIG = require("./chain-config.js");
+import { Command } from "commander";
+import fs from "fs";
+import compose from "lodash/fp/compose";
+import path from "path";
+import yaml from "yaml";
+
+import { SupportedChains } from "../src/constants/chains";
+import CHAIN_CONFIG from "./chain-config";
 
 const program = new Command();
 program
@@ -38,7 +40,8 @@ function readManifestFile() {
 
 function patchManifest(manifest) {
   const _manifest = { ...manifest };
-  const obj = CHAIN_CONFIG[NETWORK];
+
+  const obj = CHAIN_CONFIG[SupportedChains[NETWORK?.toUpperCase()]];
 
   if (!obj) throw Error("Network object doesnot exist in scripts/chain-config.js");
 

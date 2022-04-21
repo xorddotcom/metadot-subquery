@@ -1,11 +1,6 @@
+import { CHAIN_TOKEN, SupportedChains } from "../constants/chains";
 import { DOT_RE_DENOMINATION_BLOCK } from "../constants/misc";
-import {
-  CHAIN_TOKEN,
-  OldDecimalFormat,
-  OldDecimalsType,
-  SupportedTokens,
-  TOKEN_INFO,
-} from "../constants/token";
+import { OldDecimalFormat, OldDecimalsType, TOKEN_INFO } from "../constants/token";
 
 export const getPolkadotDecimalsType = (blockNumber: number): OldDecimalsType => {
   if (blockNumber >= DOT_RE_DENOMINATION_BLOCK) return OldDecimalsType.new;
@@ -13,7 +8,7 @@ export const getPolkadotDecimalsType = (blockNumber: number): OldDecimalsType =>
 };
 
 export const getTokenInfo = (
-  token: SupportedTokens,
+  token: SupportedChains,
   oldDecimalsType: OldDecimalsType = OldDecimalsType.new
 ): { name: string; decimals: number } => {
   const name = TOKEN_INFO[token].name;
@@ -40,7 +35,7 @@ export const getToken = (
   decimals: number;
   modifiedDecimals: bigint;
 } => {
-  const token: SupportedTokens = CHAIN_TOKEN;
+  const token: SupportedChains = CHAIN_TOKEN;
 
   const { name, decimals } = getTokenInfo(token, getPolkadotDecimalsType(blockNumber));
 
