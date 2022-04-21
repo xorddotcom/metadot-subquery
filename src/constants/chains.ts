@@ -1,7 +1,7 @@
 import { config as dotenvConfig } from "dotenv";
 import { resolve } from "path";
 
-dotenvConfig({ path: resolve("./.env") });
+dotenvConfig({ path: resolve("./.env.production") });
 
 const NETWORK = process.env.NETWORK;
 

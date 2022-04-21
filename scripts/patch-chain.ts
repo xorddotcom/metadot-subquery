@@ -52,11 +52,12 @@ function patchManifest(manifest) {
   const genesisHash = commandlineInput.genesisHash ? commandlineInput.genesisHash : obj.genesisHash;
   const endpoint = commandlineInput.endpoint ? commandlineInput.endpoint : obj.endpoint;
   const dictionary = commandlineInput.dictionary ? commandlineInput.dictionary : obj.dictionary;
+  const chaintypes = obj.chaintypes;
 
   // create chaintypes file
   fs.writeFileSync(
     path.resolve(__dirname, "../chaintypes.json"),
-    JSON.stringify(obj.chaintypes, null, 2),
+    JSON.stringify(chaintypes, null, 2),
     {
       encoding: "utf-8",
     }
@@ -70,10 +71,11 @@ function patchManifest(manifest) {
     genesisHash: genesisHash,
     endpoint: endpoint,
     dictionary: dictionary,
-    chaintypes: {
-      file: "./chaintypes.json",
-    },
   };
+
+  if (chaintypes) {
+    _manifest["network"].chaintypes.file = "./chaintypes.json";
+  }
 
   return _manifest;
 }
