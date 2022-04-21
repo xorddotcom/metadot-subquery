@@ -44,7 +44,7 @@ function patchManifest(manifest) {
 
   // if any commandline input is there use that otherwise the chain-config.js
   const startBlockNumber = commandlineInput.startBlockNumber
-    ? commandlineInput.startBlockNumber
+    ? Number(commandlineInput.startBlockNumber)
     : obj.startBlock;
   const genesisHash = commandlineInput.genesisHash ? commandlineInput.genesisHash : obj.genesisHash;
   const endpoint = commandlineInput.endpoint ? commandlineInput.endpoint : obj.endpoint;
