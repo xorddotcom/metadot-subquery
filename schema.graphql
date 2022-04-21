@@ -101,7 +101,7 @@ type BatchRecord @entity {
 
   block: Block
   status: BatchStatus # completed/interrupted
-  calls: [CallRecord!]! @derivedFrom(field: "batch")
+  calls: [CallRecord] @derivedFrom(field: "batch")
   sender: [BatchRecordSender] @derivedFrom(field: "batch")
   receivers: [BatchRecordReceiver] @derivedFrom(field: "batch")
 }
