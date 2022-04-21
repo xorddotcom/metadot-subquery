@@ -1,9 +1,9 @@
-import { config as dotenvConfig } from "dotenv";
-import { resolve } from "path";
+// import { config as dotenvConfig } from "dotenv";
+// import { resolve } from "path";
 
-dotenvConfig({ path: resolve("./.env.production") });
+// dotenvConfig({ path: resolve("./.env.production") });
 
-const NETWORK = process.env.NETWORK;
+// const NETWORK = process.env.NETWORK;
 
 export enum SupportedChains {
   ACALA,
@@ -17,7 +17,9 @@ export enum SupportedChains {
   WESTEND,
 }
 
-export const CHAIN_TOKEN = NETWORK
-  ? SupportedChains[NETWORK?.toUpperCase()]
-  : SupportedChains.WESTEND;
+export const CHAIN_TOKEN = SupportedChains.WESTEND;
+
+// export const CHAIN_TOKEN = NETWORK
+//   ? SupportedChains[NETWORK?.toUpperCase()]
+//   : SupportedChains.WESTEND;
 // console.log("CHAIN_TOKEN >>> ", CHAIN_TOKEN);
