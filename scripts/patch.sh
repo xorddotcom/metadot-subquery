@@ -53,7 +53,7 @@ echo "Selected Network: $NAME"
 # echo "ENDPOINT: $ENDPOINT"
 # echo "DICTIONARY: $DICTIONARY"
 
-yarn ts-node ./scripts/patch-chain.ts -n $NAME -b $BLOCK_NUMBER
+yarn ts-node ./src/scripts/patch-chain.ts -n $NAME -b $BLOCK_NUMBER
 
 # setting network env variable
 echo "NETWORK=$NAME" > .env

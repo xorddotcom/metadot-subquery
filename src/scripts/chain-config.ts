@@ -1,6 +1,6 @@
 import { typesBundleForPolkadot } from "@acala-network/type-definitions";
 
-import { SupportedChains } from "../src/constants/chains";
+import { SupportedChains } from "../constants/chains";
 
 const astar_type_definitions = {
   types: [

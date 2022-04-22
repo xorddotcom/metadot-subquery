@@ -4,7 +4,7 @@ import compose from "lodash/fp/compose";
 import path from "path";
 import yaml from "yaml";
 
-import { SupportedChains } from "../src/constants/chains";
+import { SupportedChains } from "../constants/chains";
 import CHAIN_CONFIG from "./chain-config";
 
 const program = new Command();
