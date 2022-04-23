@@ -4,3 +4,8 @@ printWidth: 100
 singleQuote: false
 tabWidth: 2
 trailingComma: es5
+
+importOrder: ["<THIRD_PARTY_MODULES>", "^[./]"]
+importOrderParserPlugins: ["typescript"]
+importOrderSeparation: true
+importOrderSortSpecifiers: true

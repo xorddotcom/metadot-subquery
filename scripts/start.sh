@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 shx rm -rf ./.data
 # sudo docker system prune -a -f --volumes

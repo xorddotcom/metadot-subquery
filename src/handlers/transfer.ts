@@ -1,8 +1,8 @@
 import { Balance } from "@polkadot/types/interfaces";
 import { SubstrateEvent } from "@subql/types";
 
-import { getPolkadotDecimalsType, getTokenInfo, SupportedTokens } from "../constants/token";
 import { calculateFees } from "../helpers/fees";
+import { getToken } from "../helpers/token";
 import { Transfer } from "../types";
 import { ensureAccounts, updateTransferStatistics } from "./account";
 import { ensureBlock } from "./block";
@@ -15,12 +15,8 @@ export async function transferHandler(event: SubstrateEvent): Promise<void> {
   const amount = data[2];
 
   const blockNumber = event.block.block.header.number.toNumber();
-  const { name, decimals } = getTokenInfo(
-    SupportedTokens.POLKADOT,
-    getPolkadotDecimalsType(blockNumber)
-  );
+  const { name, modifiedDecimals } = getToken(blockNumber);
   const blockId = event.block.block.hash.toString();
-  const modifiedDecimals = BigInt("1" + "0".repeat(decimals));
   const transformedAmount = (amount as Balance).toBigInt();
   const extrinsicHash = event.extrinsic?.extrinsic.hash.toString();
   const timestamp = event.block.timestamp;
@@ -37,7 +33,7 @@ export async function transferHandler(event: SubstrateEvent): Promise<void> {
   // ensure block
   await ensureBlock(blockId);
 
-  const entity = new Transfer(`${blockNumber}-${event.idx}`);
+  const entity = new Transfer(`${blockNumber}-${extrinsicHash}`);
   entity.fromId = from;
   entity.toId = to;
   entity.tokenId = name;

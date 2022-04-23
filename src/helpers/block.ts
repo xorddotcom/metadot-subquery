@@ -1,7 +1,7 @@
 import { Block as RuntimeBlock } from "@polkadot/types/interfaces/runtime";
 
 export const getBlockTimestamp = (block: RuntimeBlock): Date => {
-  const extrinsicForSetTimestamp = block.extrinsics.find(item => {
+  const extrinsicForSetTimestamp = block.extrinsics.find((item) => {
     return item.method.method === "set" && item.method.section === "timestamp";
   });
 

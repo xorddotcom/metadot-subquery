@@ -8,9 +8,7 @@ import { handleExtrinsic } from "./extrinsic";
 import { multisigHandler } from "./multisig";
 import { transferHandler } from "./transfer";
 
-export async function eventHandler(
-  event: SubstrateEvent
-): Promise<{
+export async function eventHandler(event: SubstrateEvent): Promise<{
   index: number;
   blockNumber: bigint;
   blockHash: string;

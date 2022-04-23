@@ -5,7 +5,7 @@ export function calculateFees(extrinsic: SubstrateExtrinsic): bigint {
   let depositFees = BigInt(0);
   let treasuryFees = BigInt(0);
 
-  const eventRecordWithdraw = extrinsic.events.find(event => {
+  const eventRecordWithdraw = extrinsic.events.find((event) => {
     return event.event.section == "balances" && event.event.method == "Withdraw";
   });
 
@@ -22,11 +22,11 @@ export function calculateFees(extrinsic: SubstrateExtrinsic): bigint {
     return extrinsicSigner === withdrawAccountId ? (fee as Balance).toBigInt() : BigInt(0);
   }
 
-  const eventRecordDeposit = extrinsic.events.find(event => {
+  const eventRecordDeposit = extrinsic.events.find((event) => {
     return event.event.section == "balances" && event.event.method == "Deposit";
   });
 
-  const eventRecordTreasury = extrinsic.events.find(event => {
+  const eventRecordTreasury = extrinsic.events.find((event) => {
     return event.event.section == "treasury" && event.event.method == "Deposit";
   });
 
