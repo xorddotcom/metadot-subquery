@@ -53,8 +53,13 @@ echo "Selected Network: $NAME"
 # echo "ENDPOINT: $ENDPOINT"
 # echo "DICTIONARY: $DICTIONARY"
 
-yarn ts-node ./src/scripts/patch-chain.ts -n $NAME -b $BLOCK_NUMBER
+npx ts-node ./src/scripts/patch-chain.ts -n $NAME -b $BLOCK_NUMBER
 
-# setting network env variable
-echo "NETWORK=$NAME" > .env
-echo "NETWORK=$NAME" > .env.production
+echo "import { SupportedChains } from './chains';" > ./src/constants/network.ts
+
+# convert to uppercase
+NAME=`echo $NAME | tr '[a-z]' '[A-Z]'`
+
+echo "export const CHAIN_TOKEN = SupportedChains.$NAME;" >> ./src/constants/network.ts
+
+npx prettier --config ./.prettierrc.yaml --ignore-path ./.prettierignore --write ./src/constants/network.ts
