@@ -1,5 +1,6 @@
-import { CHAIN_TOKEN, SupportedChains } from "../constants/chains";
+import { SupportedChains } from "../constants/chains";
 import { DOT_RE_DENOMINATION_BLOCK } from "../constants/misc";
+import { CHAIN_TOKEN } from "../constants/network";
 import { OldDecimalFormat, OldDecimalsType, TOKEN_INFO } from "../constants/token";
 
 export const getPolkadotDecimalsType = (blockNumber: number): OldDecimalsType => {

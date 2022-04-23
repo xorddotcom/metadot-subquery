@@ -10,7 +10,7 @@ network:
   endpoint: wss://rpc.polkadot.io
   dictionary: https://api.subquery.network/sq/subquery/dictionary-polkadot
   chaintypes:
-    file: ./chaintypes/contextfree.yaml
+    file: ./chaintypes.json
 dataSources:
   - kind: substrate/Runtime
     startBlock: 780104 # Polkadot

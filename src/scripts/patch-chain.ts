@@ -22,8 +22,9 @@ program
 program.parse(process.argv);
 
 const NETWORK = program.network;
-const BASE_MANIFEST_PATH = path.resolve(__dirname, "../base-project.yaml");
-const MANIFEST_PATH = path.resolve(__dirname, "../project.yaml");
+const BASE_MANIFEST_PATH = path.resolve("./base-project.yaml");
+const MANIFEST_PATH = path.resolve("./project.yaml");
+const CHAINTYPES_PATH = path.resolve("./chaintypes.json");
 
 const commandlineInput = {
   startBlockNumber: program.blockNumber,
@@ -54,14 +55,10 @@ function patchManifest(manifest) {
   const dictionary = commandlineInput.dictionary ? commandlineInput.dictionary : obj.dictionary;
   const chaintypes = obj.chaintypes;
 
-  // create chaintypes file
-  fs.writeFileSync(
-    path.resolve(__dirname, "../chaintypes.json"),
-    JSON.stringify(chaintypes, null, 2),
-    {
-      encoding: "utf-8",
-    }
-  );
+  // delete chaintypes.json
+  if (fs.existsSync(CHAINTYPES_PATH)) {
+    fs.unlinkSync(CHAINTYPES_PATH);
+  }
 
   // update start block
   _manifest.dataSources[0].startBlock = startBlockNumber;
@@ -76,8 +73,12 @@ function patchManifest(manifest) {
     _manifest["network"].dictionary = dictionary;
   }
 
+  // create chaintypes file if chaintypes exist
   if (chaintypes) {
-    _manifest["network"].chaintypes.file = "./chaintypes.json";
+    fs.writeFileSync(path.resolve(CHAINTYPES_PATH), JSON.stringify(chaintypes, null, 2), {
+      encoding: "utf-8",
+    });
+    _manifest["network"].chaintypes = { file: "./chaintypes.json" };
   }
 
   return _manifest;
