@@ -6,6 +6,7 @@ import { batchHandler } from "./batch";
 import { ensureBlock } from "./block";
 import { handleExtrinsic } from "./extrinsic";
 import { multisigHandler } from "./multisig";
+import { swapHandler } from "./swap";
 import { transferHandler } from "./transfer";
 
 export async function eventHandler(event: SubstrateEvent): Promise<{
@@ -68,6 +69,11 @@ export async function eventHandler(event: SubstrateEvent): Promise<{
     // TRANSFER
     if (section === "balances" && method === "Transfer") {
       await transferHandler(event);
+    }
+
+    // SWAP
+    if (section === "dex" && method === "Swap") {
+      await swapHandler(event);
     }
   };
 

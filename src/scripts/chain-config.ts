@@ -223,10 +223,10 @@ const chainConfig = {
     chaintypes: null,
   },
   [SupportedChains.KARURA]: {
-    startBlock: 1738638,
+    startBlock: 1803634,
     genesisHash: "0xbaf5aabe40646d11f0ee8abbdc64f4a4b7674925cba08e4a05ff9ebed6e2126b",
     endpoint: "wss://karura.api.onfinality.io/public-ws",
-    dictionary: "https://api.subquery.network/sq/subquery/acala-dictionary",
+    dictionary: "https://api.subquery.network/sq/AcalaNetwork/karura-dictionary",
     chaintypes: { typesBundle: typesBundleForPolkadot },
   },
   [SupportedChains.POLKADOT]: {

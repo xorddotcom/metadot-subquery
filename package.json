@@ -11,6 +11,7 @@
     "@commitlint/cli": "^16.2.3",
     "@commitlint/config-conventional": "^16.2.1",
     "@polkadot/api": "^7.12.1",
+    "@polkadot/types": "^8.2.1",
     "@subql/cli": "0.22.0",
     "@subql/node": "0.33.0",
     "@subql/query": "0.14.1",

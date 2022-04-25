@@ -62,32 +62,7 @@ dataSources:
           kind: substrate/EventHandler
           filter:
             module: dex
-            method: ProvisioningToEnabled
-        - handler: handleEvent
-          kind: substrate/EventHandler
-          filter:
-            module: dex
-            method: AddLiquidity
-        - handler: handleEvent
-          kind: substrate/EventHandler
-          filter:
-            module: dex
-            method: RemoveLiquidity
-        - handler: handleEvent
-          kind: substrate/EventHandler
-          filter:
-            module: dex
             method: Swap
-        - handler: handleEvent
-          kind: substrate/EventHandler
-          filter:
-            module: dex
-            method: ListProvision
-        - handler: handleEvent
-          kind: substrate/EventHandler
-          filter:
-            module: dex
-            method: AddProvision
         # saves every extrinsic call on the chain
         - handler: handleCall
           kind: substrate/CallHandler

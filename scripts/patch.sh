@@ -48,12 +48,12 @@ parser() {
 parser "$@"
 
 echo "Selected Network: $NAME"
-# echo "BLOCK_NUMBER: $BLOCK_NUMBER"
-# echo "GENESIS_HASH: $GENESIS_HASH"
-# echo "ENDPOINT: $ENDPOINT"
-# echo "DICTIONARY: $DICTIONARY"
+[[ ! -z "$BLOCK_NUMBER" ]] && echo "BLOCK_NUMBER: $BLOCK_NUMBER"
+[[ ! -z "$GENESIS_HASH" ]] && echo "GENESIS_HASH: $GENESIS_HASH"
+[[ ! -z "$ENDPOINT" ]] && echo "ENDPOINT: $ENDPOINT"
+[[ ! -z "$DICTIONARY" ]] && echo "DICTIONARY: $DICTIONARY"
 
-npx ts-node ./src/scripts/patch-chain.ts -n $NAME -b $BLOCK_NUMBER
+npx ts-node ./src/scripts/patch-chain.ts -n $NAME -b $BLOCK_NUMBER -g $GENESIS_HASH -e $ENDPOINT -d $DICTIONARY
 
 echo "import { SupportedChains } from './chains';" > ./src/constants/network.ts
 
