@@ -1,6 +1,8 @@
 export enum SupportedChains {
   ACALA,
   ASTAR,
+  BIFROST_MAINNET,
+  BIFROST_TESTNET,
   CONTEXTFREE,
   KUSAMA,
   KARURA,
