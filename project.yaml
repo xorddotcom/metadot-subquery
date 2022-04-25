@@ -5,11 +5,13 @@ description: subquery indexer for metadot
 schema:
   file: ./schema.graphql
 network:
-  genesisHash: "0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3"
-  endpoint: wss://polkadot.api.onfinality.io/public-ws
+  genesisHash: "0x8b290fa39a8808f29d7309ea99442c95bf964838aef14be5a6449ae48f8a5f1f"
+  endpoint: wss://bifrost-rpc.testnet.liebi.com/ws
+  chaintypes:
+    file: ./chaintypes.json
 dataSources:
   - kind: substrate/Runtime
-    startBlock: 9998289
+    startBlock: 172043
     mapping:
       file: ./dist/index.js
       handlers:
