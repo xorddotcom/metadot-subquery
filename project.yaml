@@ -53,5 +53,35 @@ dataSources:
           filter:
             module: utility
             method: BatchInterrupted
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: dex
+            method: ProvisioningToEnabled
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: dex
+            method: AddLiquidity
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: dex
+            method: RemoveLiquidity
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: dex
+            method: Swap
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: dex
+            method: ListProvision
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: dex
+            method: AddProvision
         - handler: handleCall
           kind: substrate/CallHandler

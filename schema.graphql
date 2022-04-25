@@ -160,3 +160,13 @@ type CallRecord @entity {
   sender: Account
   token: Token
 }
+
+# dex
+type Dex @entity {
+  id: ID!
+
+  poolCount: Int
+
+  totalVolumeUSD: String
+  totalTVLUSD: String
+}
