@@ -15,10 +15,10 @@ program
     "input network name as written in chaintypes.js",
     "polkadot"
   )
-  .option("-b, --blockNumber <blockNumber>", "start block to index from")
-  .option("-g, --genesisHash <genesisHash>", "genesis hash of network")
-  .option("-e, --endpoint <endpoint>", "endpoint of network")
-  .option("-d, --dictionary <dictionary>", "dictionary of network");
+  .option("-b, --blockNumber [blockNumber]", "start block to index from", null)
+  .option("-g, --genesisHash [genesisHash]", "genesis hash of network", null)
+  .option("-e, --endpoint [endpoint]", "endpoint of network", null)
+  .option("-d, --dictionary [dictionary]", "dictionary of network", null);
 program.parse(process.argv);
 
 const NETWORK = program.network;
