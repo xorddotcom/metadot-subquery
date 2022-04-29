@@ -1,16 +1,22 @@
-specVersion: 0.2.0
+specVersion: 1.0.0
 name: metadot-subql
 version: 0.0.4
+runner:
+  node:
+    name: "@subql/node"
+    version: 0.34.0
+  query:
+    name: "@subql/query"
+    version: 0.24.0
 description: subquery indexer for metadot
+repository: "https://github.com/ahmedali8/metadot-subql"
 schema:
   file: ./schema.graphql
 network:
   # Polkadot
-  genesisHash: "0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3"
+  chainId: "0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3"
   endpoint: wss://rpc.polkadot.io
   dictionary: https://api.subquery.network/sq/subquery/dictionary-polkadot
-  chaintypes:
-    file: ./chaintypes.json
 dataSources:
   - kind: substrate/Runtime
     startBlock: 780104 # Polkadot
@@ -58,6 +64,3 @@ dataSources:
           filter:
             module: utility
             method: BatchInterrupted
-        # saves every extrinsic call on the chain
-        - handler: handleCall
-          kind: substrate/CallHandler

@@ -16,7 +16,7 @@ program
     "polkadot"
   )
   .option("-b, --blockNumber [blockNumber]", "start block to index from", null)
-  .option("-g, --genesisHash [genesisHash]", "genesis hash of network", null)
+  .option("-c, --chainId [chainId]", "chainId of network", null)
   .option("-e, --endpoint [endpoint]", "endpoint of network", null)
   .option("-d, --dictionary [dictionary]", "dictionary of network", null);
 program.parse(process.argv);
@@ -28,7 +28,7 @@ const CHAINTYPES_PATH = path.resolve("./chaintypes.json");
 
 const commandlineInput = {
   startBlockNumber: program.blockNumber,
-  genesisHash: program.genesisHash,
+  chainId: program.chainId,
   endpoint: program.endpoint,
   dictionary: program.dictionary,
 };
@@ -50,10 +50,9 @@ function patchManifest(manifest) {
   const startBlockNumber = commandlineInput.startBlockNumber
     ? Number(commandlineInput.startBlockNumber)
     : obj.startBlock;
-  const genesisHash = commandlineInput.genesisHash ? commandlineInput.genesisHash : obj.genesisHash;
+  const chainId = commandlineInput.chainId ? commandlineInput.chainId : obj.chainId;
   const endpoint = commandlineInput.endpoint ? commandlineInput.endpoint : obj.endpoint;
   const dictionary = commandlineInput.dictionary ? commandlineInput.dictionary : obj.dictionary;
-  const chaintypes = obj.chaintypes;
 
   // delete chaintypes.json
   if (fs.existsSync(CHAINTYPES_PATH)) {
@@ -65,20 +64,12 @@ function patchManifest(manifest) {
 
   // update network details
   _manifest["network"] = {
-    genesisHash: genesisHash,
+    chainId: chainId,
     endpoint: endpoint,
   };
 
   if (dictionary) {
     _manifest["network"].dictionary = dictionary;
-  }
-
-  // create chaintypes file if chaintypes exist
-  if (chaintypes) {
-    fs.writeFileSync(path.resolve(CHAINTYPES_PATH), JSON.stringify(chaintypes, null, 2), {
-      encoding: "utf-8",
-    });
-    _manifest["network"].chaintypes = { file: "./chaintypes.json" };
   }
 
   return _manifest;

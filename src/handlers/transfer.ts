@@ -15,7 +15,7 @@ export async function transferHandler(event: SubstrateEvent): Promise<void> {
   const amount = data[2];
 
   const blockNumber = event.block.block.header.number.toNumber();
-  const { name, modifiedDecimals } = getToken(blockNumber);
+  const { name, decimals } = ensureToken(blockNumber);
   const blockId = event.block.block.hash.toString();
   const transformedAmount = (amount as Balance).toBigInt();
   const extrinsicHash = event.extrinsic?.extrinsic.hash.toString();
@@ -27,16 +27,13 @@ export async function transferHandler(event: SubstrateEvent): Promise<void> {
   await ensureAccounts([to, from]);
   await updateTransferStatistics([to, from]);
 
-  // set token details
-  await ensureToken(name, modifiedDecimals);
-
   // ensure block
   await ensureBlock(blockId);
 
   const entity = new Transfer(`${blockNumber}-${extrinsicHash}`);
   entity.fromId = from;
   entity.toId = to;
-  entity.tokenId = name;
+  entity.token = { name, decimals };
   entity.amount = transformedAmount;
   entity.timestamp = timestamp;
   entity.extrinsicHash = extrinsicHash;

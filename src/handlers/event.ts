@@ -40,7 +40,8 @@ export async function eventHandler(event: SubstrateEvent): Promise<{
 
     await ensureBlock(blockHash);
     if (extrinsicHash) {
-      await (await handleExtrinsic(event.extrinsic)).save();
+      const handler = await handleExtrinsic(event.extrinsic);
+      await handler.save();
       entity.extrinsicId = extrinsicHash;
     }
 

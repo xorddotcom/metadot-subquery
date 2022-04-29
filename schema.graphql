@@ -9,6 +9,31 @@ enum BatchStatus {
   interrupted
 }
 
+type TokenData @jsonField {
+  name: String
+  decimals: String
+}
+
+type Account @entity {
+  id: ID! # accountId
+  transferTotalCount: Int
+  batchTotalCount: Int
+
+  batchRecordsTo: [BatchRecordReceiver] @derivedFrom(field: "receiver")
+  batchRecordsFrom: [BatchRecordSender] @derivedFrom(field: "sender")
+  extrinsics: [Extrinsic] @derivedFrom(field: "signer")
+  transferFrom: [Transfer] @derivedFrom(field: "from")
+  transferTo: [Transfer] @derivedFrom(field: "to")
+}
+
+type ApproveRecord @entity {
+  id: ID! # accountId-blockNumber-extrinsicIdx
+  account: String! # approve account address
+  callHash: String!
+
+  multisigRecord: MultisigRecord!
+}
+
 type Block @entity {
   id: ID! # block hash
   number: BigInt
@@ -18,6 +43,53 @@ type Block @entity {
 
   extrinsics: [Extrinsic] @derivedFrom(field: "block")
   events: [Event] @derivedFrom(field: "block")
+}
+
+type BatchRecord @entity {
+  id: ID! # blockNumber-extrinsicHash
+  confirmExtrinsicIdx: String
+  cancelExtrinsicIdx: String
+  callsStringArray: [String]
+  extrinsicHash: String
+  module: String # utility
+  method: String # batch
+  signature: String
+  timestamp: Date
+
+  block: Block
+  status: BatchStatus # completed/interrupted
+  calls: [CallRecord] @derivedFrom(field: "batch")
+  sender: [BatchRecordSender] @derivedFrom(field: "batch")
+  receivers: [BatchRecordReceiver] @derivedFrom(field: "batch")
+}
+
+type BatchRecordReceiver @entity {
+  id: ID! # combine id of batch and account id
+  receiver: Account
+  batch: BatchRecord
+}
+
+type BatchRecordSender @entity {
+  id: ID! # combine id of batch and account id
+  sender: Account
+  batch: BatchRecord
+}
+
+# here callNumber is call index
+type CallRecord @entity {
+  id: ID! # callNumber-extrinsicIdx
+  amount: String
+  extrinsicHash: String
+  index: Int
+  module: String
+  name: String
+  timestamp: Date!
+
+  block: Block
+  batch: BatchRecord!
+  receiver: Account
+  sender: Account
+  token: TokenData
 }
 
 type Extrinsic @entity {
@@ -73,63 +145,6 @@ type MultisigRecord @entity {
   confirmBlock: Block
 }
 
-type ApproveRecord @entity {
-  id: ID! # accountId-blockNumber-extrinsicIdx
-  account: String! # approve account address
-  callHash: String!
-
-  multisigRecord: MultisigRecord!
-}
-
-type Token @entity {
-  id: ID!
-
-  decimals: BigInt!
-  name: String
-}
-
-type BatchRecord @entity {
-  id: ID! # blockNumber-extrinsicHash
-  confirmExtrinsicIdx: String
-  cancelExtrinsicIdx: String
-  callsStringArray: [String]
-  extrinsicHash: String
-  module: String # utility
-  method: String # batch
-  signature: String
-  timestamp: Date
-
-  block: Block
-  status: BatchStatus # completed/interrupted
-  calls: [CallRecord] @derivedFrom(field: "batch")
-  sender: [BatchRecordSender] @derivedFrom(field: "batch")
-  receivers: [BatchRecordReceiver] @derivedFrom(field: "batch")
-}
-
-type BatchRecordReceiver @entity {
-  id: ID! # combine id of batch and account id
-  receiver: Account
-  batch: BatchRecord
-}
-
-type BatchRecordSender @entity {
-  id: ID! # combine id of batch and account id
-  sender: Account
-  batch: BatchRecord
-}
-
-type Account @entity {
-  id: ID! # accountId
-  transferTotalCount: Int
-  batchTotalCount: Int
-
-  batchRecordsTo: [BatchRecordReceiver] @derivedFrom(field: "receiver")
-  batchRecordsFrom: [BatchRecordSender] @derivedFrom(field: "sender")
-  extrinsics: [Extrinsic] @derivedFrom(field: "signer")
-  transferFrom: [Transfer] @derivedFrom(field: "from")
-  transferTo: [Transfer] @derivedFrom(field: "to")
-}
-
 type Transfer @entity {
   id: ID! # blockNumber-extrinsicHash
   amount: BigInt!
@@ -141,22 +156,5 @@ type Transfer @entity {
   block: Block
   from: Account!
   to: Account!
-  token: Token
-}
-
-# here callNumber is call index
-type CallRecord @entity {
-  id: ID! # callNumber-extrinsicIdx
-  amount: String
-  extrinsicHash: String
-  index: Int
-  module: String
-  name: String
-  timestamp: Date!
-
-  block: Block
-  batch: BatchRecord!
-  receiver: Account
-  sender: Account
-  token: Token
+  token: TokenData
 }

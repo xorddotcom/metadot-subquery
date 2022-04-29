@@ -67,7 +67,7 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
   const blockNumber = event.block.block.header.number.toNumber();
   const signature = event.extrinsic?.extrinsic.signature.toString();
 
-  const { name, modifiedDecimals } = getToken(blockNumber);
+  const { name, decimals } = ensureToken(blockNumber);
 
   const extrinsicRecord = await Extrinsic.get(extrinsicHash);
   const args: Arg[] = JSON.parse(extrinsicRecord.args);
@@ -122,11 +122,7 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
     }
 
     batchRecord.blockId = blockId;
-    // batchRecord.extrinsicsId = extrinsicHash;
     await batchRecord.save();
-
-    const recordArr: string[] = [];
-    const receivers: string[] = [];
 
     // create CallRecord
     for (let j = 0; j < values.length; j++) {
@@ -146,8 +142,6 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
       // get transfer event
       const transferId = `${blockNumber}-${extrinsicHash}`;
       await Transfer.remove(transferId);
-      // const transfer = await Transfer.get(transferId);
-      // logger.info("transfer extrinsic hash >>> " + transfer.extrinsicHash);
 
       // create new call
       const callId = `${index}-${event.extrinsic.idx}`;
@@ -155,7 +149,6 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
       await ensureBlock(blockId);
       await ensureBatchRecord(batchRecordId);
       await ensureAccounts([receiver, signer]);
-      await ensureToken(name, modifiedDecimals);
 
       // create batch record receiver entity
       const batchRecordReceiver = new BatchRecordReceiver(`${batchRecordId}-${receiver}`);
@@ -172,7 +165,6 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
       const call = new CallRecord(callId);
       call.amount = amount;
       call.extrinsicHash = extrinsicHash;
-      // logger.info("call extrinsic hash >>> " + extrinsicHash);
       call.index = index;
       call.module = section;
       call.name = method;
@@ -181,15 +173,9 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
       call.batchId = batchRecordId;
       call.receiverId = receiver;
       call.senderId = signer;
-      call.tokenId = name;
+      call.token = { name, decimals };
 
       await call.save();
-
-      recordArr.push(callId);
-      receivers.push(receiver);
     }
-
-    batchRecord.callsStringArray = recordArr;
-    await batchRecord.save();
   }
 }
