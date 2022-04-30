@@ -2,13 +2,12 @@ import { Vec } from "@polkadot/types";
 import { Call as CallType } from "@polkadot/types/interfaces/runtime";
 import { SubstrateEvent } from "@subql/types";
 
-import { getToken } from "../helpers/token";
 import {
   BatchRecord,
   BatchRecordReceiver,
   BatchRecordSender,
   BatchStatus,
-  CallRecord,
+  CallData,
   Extrinsic,
   Transfer,
 } from "../types";
@@ -33,6 +32,22 @@ interface Arg {
   method: string;
   section: string;
 }
+
+const checkIfBatchTransfer = (values: Value[]): { hasTransfer: boolean; transferCount: number } => {
+  let hasTransfer = false;
+  let transferCount = 0;
+  for (let k = 0; k < values.length; k++) {
+    const value: Value = values[k];
+    // check if transfer
+    if (value?.args?.dest) {
+      hasTransfer = true;
+      transferCount = transferCount + 1;
+    } else {
+      hasTransfer = false;
+    }
+  }
+  return { hasTransfer, transferCount };
+};
 
 export async function ensureBatchRecord(id: string): Promise<void> {
   const entity = await BatchRecord.get(id);
@@ -67,28 +82,17 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
   const blockNumber = event.block.block.header.number.toNumber();
   const signature = event.extrinsic?.extrinsic.signature.toString();
 
-  const { name, modifiedDecimals } = getToken(blockNumber);
+  const { name, decimals } = ensureToken(blockNumber);
 
   const extrinsicRecord = await Extrinsic.get(extrinsicHash);
   const args: Arg[] = JSON.parse(extrinsicRecord.args);
 
   if (extrinsicRecord.section !== "utility") return;
 
-  if (args[0].name === "calls") {
+  if (args[0].name === "calls" && (args[0].method === "batch" || args[0].method === "batchAll")) {
     const values: Value[] = args[0].value;
-    let hasTransfer = false;
-    let hasTransferCount = 0;
-    for (let k = 0; k < values.length; k++) {
-      const value: Value = values[k];
-      // check if transfer
-      if (value?.args?.dest) {
-        hasTransfer = true;
-        hasTransferCount = hasTransferCount + 1;
-      } else {
-        hasTransfer = false;
-      }
-    }
-    if (!hasTransfer || hasTransferCount === 0) return;
+    const { hasTransfer, transferCount } = checkIfBatchTransfer(values);
+    if (!hasTransfer || transferCount === 0) return;
 
     // if Transfer then proceed
 
@@ -122,13 +126,11 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
     }
 
     batchRecord.blockId = blockId;
-    // batchRecord.extrinsicsId = extrinsicHash;
     await batchRecord.save();
 
-    const recordArr: string[] = [];
-    const receivers: string[] = [];
+    const callData: CallData[] = [];
 
-    // create CallRecord
+    // create CallData
     for (let j = 0; j < values.length; j++) {
       const index: number = j;
       const value: Value = values[index];
@@ -146,16 +148,10 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
       // get transfer event
       const transferId = `${blockNumber}-${extrinsicHash}`;
       await Transfer.remove(transferId);
-      // const transfer = await Transfer.get(transferId);
-      // logger.info("transfer extrinsic hash >>> " + transfer.extrinsicHash);
-
-      // create new call
-      const callId = `${index}-${event.extrinsic.idx}`;
 
       await ensureBlock(blockId);
       await ensureBatchRecord(batchRecordId);
       await ensureAccounts([receiver, signer]);
-      await ensureToken(name, modifiedDecimals);
 
       // create batch record receiver entity
       const batchRecordReceiver = new BatchRecordReceiver(`${batchRecordId}-${receiver}`);
@@ -169,27 +165,19 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
       batchRecordSender.batchId = batchRecordId;
       await batchRecordSender.save();
 
-      const call = new CallRecord(callId);
-      call.amount = amount;
-      call.extrinsicHash = extrinsicHash;
-      // logger.info("call extrinsic hash >>> " + extrinsicHash);
-      call.index = index;
-      call.module = section;
-      call.name = method;
-      call.timestamp = timestamp;
-      call.blockId = blockId;
-      call.batchId = batchRecordId;
-      call.receiverId = receiver;
-      call.senderId = signer;
-      call.tokenId = name;
-
-      await call.save();
-
-      recordArr.push(callId);
-      receivers.push(receiver);
+      callData.push({
+        amount: amount,
+        timestamp: timestamp,
+        receiver: receiver,
+        sender: signer,
+        token: {
+          name,
+          decimals,
+        },
+      });
     }
 
-    batchRecord.callsStringArray = recordArr;
+    batchRecord.calls = callData;
     await batchRecord.save();
   }
 }

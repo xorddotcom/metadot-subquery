@@ -1,14 +1,7 @@
-import { Token } from "../types";
+import { getToken } from "../helpers/token";
 
-export async function ensureToken(id: string, decimals: bigint): Promise<void> {
-  const token = await Token.get(id);
+export function ensureToken(blockNumber: number) {
+  const { name, modifiedDecimals } = getToken(blockNumber);
 
-  if (!token) {
-    const token = new Token(id);
-
-    token.name = id;
-    token.decimals = decimals;
-
-    await token.save();
-  }
+  return { name: name, decimals: modifiedDecimals.toString() };
 }

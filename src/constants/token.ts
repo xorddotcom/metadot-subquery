@@ -28,6 +28,14 @@ export const TOKEN_INFO: TokenInfoMap = {
     name: "ASTR",
     decimals: 18,
   },
+  [SupportedChains.BIFROST_MAINNET]: {
+    name: "BNC",
+    decimals: 12,
+  },
+  [SupportedChains.BIFROST_TESTNET]: {
+    name: "BNC",
+    decimals: 12,
+  },
   [SupportedChains.CONTEXTFREE]: {
     name: "CTX",
     decimals: 18,
