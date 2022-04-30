@@ -2,7 +2,6 @@ import { Balance } from "@polkadot/types/interfaces";
 import { SubstrateEvent } from "@subql/types";
 
 import { calculateFees } from "../helpers/fees";
-import { getToken } from "../helpers/token";
 import { Transfer } from "../types";
 import { ensureAccounts, updateTransferStatistics } from "./account";
 import { ensureBlock } from "./block";

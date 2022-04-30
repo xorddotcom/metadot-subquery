@@ -1,4 +1,4 @@
-import { Account, BatchRecord } from "../types";
+import { Account } from "../types";
 
 export async function ensureAccount(id: string): Promise<Account> {
   const account = await Account.get(id);

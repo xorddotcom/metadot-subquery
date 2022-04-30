@@ -57,8 +57,8 @@ type BatchRecord @entity {
   timestamp: Date
 
   block: Block
+  calls: [CallData]
   status: BatchStatus # completed/interrupted
-  calls: [CallRecord] @derivedFrom(field: "batch")
   sender: [BatchRecordSender] @derivedFrom(field: "batch")
   receivers: [BatchRecordReceiver] @derivedFrom(field: "batch")
 }
@@ -75,20 +75,12 @@ type BatchRecordSender @entity {
   batch: BatchRecord
 }
 
-# here callNumber is call index
-type CallRecord @entity {
-  id: ID! # callNumber-extrinsicIdx
+type CallData @jsonField {
   amount: String
-  extrinsicHash: String
-  index: Int
-  module: String
-  name: String
-  timestamp: Date!
+  timestamp: Date
 
-  block: Block
-  batch: BatchRecord!
-  receiver: Account
-  sender: Account
+  receiver: String
+  sender: String
   token: TokenData
 }
 
