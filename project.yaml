@@ -1,0 +1,61 @@
+specVersion: 1.0.0
+name: metadot-subql
+version: 0.0.4
+runner:
+  node:
+    name: "@subql/node"
+    version: 0.34.0
+  query:
+    name: "@subql/query"
+    version: 0.24.0
+description: subquery indexer for metadot
+repository: https://github.com/ahmedali8/metadot-subql
+schema:
+  file: ./schema.graphql
+network:
+  chainId: "0xbaf5aabe40646d11f0ee8abbdc64f4a4b7674925cba08e4a05ff9ebed6e2126b"
+  endpoint: wss://karura.api.onfinality.io/public-ws
+  dictionary: https://api.subquery.network/sq/AcalaNetwork/karura-dictionary
+dataSources:
+  - kind: substrate/Runtime
+    startBlock: 1820021
+    mapping:
+      file: ./dist/index.js
+      handlers:
+        - handler: handleBlock
+          kind: substrate/BlockHandler
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: multisig
+            method: NewMultisig
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: multisig
+            method: MultisigApproval
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: multisig
+            method: MultisigExecuted
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: multisig
+            method: MultisigCancelled
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: balances
+            method: Transfer
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: utility
+            method: BatchCompleted
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: utility
+            method: BatchInterrupted
