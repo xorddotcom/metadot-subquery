@@ -5,7 +5,7 @@
 # Parameter - Value
 #      n      input network name as written in chains.ts in lowercase
 #      b      start block to index from
-#      g      genesis hash of network
+#      c      chainId of network
 #      e      endpoint of network
 #      d      dictionary of network
 #
@@ -39,7 +39,7 @@ parser() {
 
   NAME=$n
   BLOCK_NUMBER=$b
-  GENESIS_HASH=$g
+  CHAIN_ID=$c
   ENDPOINT=$e
   DICTIONARY=$d
 }
@@ -48,12 +48,12 @@ parser() {
 parser "$@"
 
 echo "Selected Network: $NAME"
-# echo "BLOCK_NUMBER: $BLOCK_NUMBER"
-# echo "GENESIS_HASH: $GENESIS_HASH"
-# echo "ENDPOINT: $ENDPOINT"
-# echo "DICTIONARY: $DICTIONARY"
+[[ ! -z "$BLOCK_NUMBER" ]] && echo "BLOCK_NUMBER: $BLOCK_NUMBER"
+[[ ! -z "$CHAIN_ID" ]] && echo "CHAIN_ID: $CHAIN_ID"
+[[ ! -z "$ENDPOINT" ]] && echo "ENDPOINT: $ENDPOINT"
+[[ ! -z "$DICTIONARY" ]] && echo "DICTIONARY: $DICTIONARY"
 
-npx ts-node ./src/scripts/patch-chain.ts -n $NAME -b $BLOCK_NUMBER
+npx ts-node ./src/scripts/patch-chain.ts -n $NAME -b $BLOCK_NUMBER -c $CHAIN_ID -e $ENDPOINT -d $DICTIONARY
 
 echo "import { SupportedChains } from './chains';" > ./src/constants/network.ts
 
