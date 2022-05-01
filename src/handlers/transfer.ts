@@ -42,3 +42,45 @@ export async function transferHandler(event: SubstrateEvent): Promise<void> {
 
   await entity.save();
 }
+
+export async function transferCurrencyHandler(event: SubstrateEvent): Promise<void> {
+  const data = event.event.data;
+  const currencyId = data[0];
+  const from = data[1].toString();
+  const to = data[2].toString();
+  const amount = data[3];
+
+  const currency = JSON.parse(JSON.stringify(currencyId));
+  if (currency.token) {
+    const blockNumber = event.block.block.header.number.toNumber();
+    const { name: defaultName, decimals: defaultDecimals } = ensureToken(blockNumber);
+    const blockId = event.block.block.hash.toString();
+    const transformedAmount = (amount as Balance).toBigInt();
+    const extrinsicHash = event.extrinsic?.extrinsic.hash.toString();
+    const timestamp = event.block.timestamp;
+    const isSuccess = event.extrinsic ? event.extrinsic.success : false;
+    const fees = event.extrinsic ? calculateFees(event.extrinsic) : BigInt(0);
+
+    const modifiedName: string = currency ? currency?.token : defaultName;
+
+    // to and from
+    await ensureAccounts([to, from]);
+    await updateTransferStatistics([to, from]);
+
+    // ensure block
+    await ensureBlock(blockId);
+
+    const entity = new Transfer(`${blockNumber}-${extrinsicHash}`);
+    entity.fromId = from;
+    entity.toId = to;
+    entity.token = { name: modifiedName, decimals: defaultDecimals };
+    entity.amount = transformedAmount;
+    entity.timestamp = timestamp;
+    entity.extrinsicHash = extrinsicHash;
+    entity.status = isSuccess;
+    entity.fees = fees;
+    entity.blockId = blockId;
+
+    await entity.save();
+  }
+}
