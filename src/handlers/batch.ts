@@ -87,6 +87,8 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
   const extrinsicRecord = await Extrinsic.get(extrinsicHash);
   const args: Arg[] = JSON.parse(extrinsicRecord.args);
 
+  logger.info("args >>> " + JSON.stringify(args[0]));
+
   if (extrinsicRecord.section !== "utility") return;
 
   if (args[0].name === "calls" && (args[0].method === "batch" || args[0].method === "batchAll")) {
@@ -128,6 +130,13 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
     batchRecord.blockId = blockId;
     await batchRecord.save();
 
+    // get transfer event
+    const transferId = `${blockNumber}-${extrinsicHash}`;
+    const transfer = await Transfer.get(transferId);
+    logger.info("tranfer token >>> " + JSON.stringify(transfer?.token));
+    const token = transfer?.token ? transfer?.token : { name, decimals };
+    logger.info("token >>> " + token);
+
     const callData: CallData[] = [];
 
     // create CallData
@@ -144,10 +153,6 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
           value: amount,
         },
       } = value;
-
-      // get transfer event
-      const transferId = `${blockNumber}-${extrinsicHash}`;
-      await Transfer.remove(transferId);
 
       await ensureBlock(blockId);
       await ensureBatchRecord(batchRecordId);
@@ -170,14 +175,13 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
         timestamp: timestamp,
         receiver: receiver,
         sender: signer,
-        token: {
-          name,
-          decimals,
-        },
+        token: token,
       });
     }
 
     batchRecord.calls = callData;
     await batchRecord.save();
+
+    await Transfer.remove(transferId);
   }
 }
