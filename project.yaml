@@ -13,12 +13,12 @@ repository: https://github.com/ahmedali8/metadot-subql
 schema:
   file: ./schema.graphql
 network:
-  chainId: "0xfc41b9bd8ef8fe53d58c7ea67c794c7ec9a73daf05e6d54b14ff6342c99ba64c"
-  endpoint: wss://acala-polkadot.api.onfinality.io/public-ws
-  dictionary: https://api.subquery.network/sq/subquery/acala-dictionary
+  chainId: "0xbaf5aabe40646d11f0ee8abbdc64f4a4b7674925cba08e4a05ff9ebed6e2126b"
+  endpoint: wss://karura.api.onfinality.io/public-ws
+  dictionary: https://api.subquery.network/sq/AcalaNetwork/karura-dictionary
 dataSources:
   - kind: substrate/Runtime
-    startBlock: 910989
+    startBlock: 1820021
     mapping:
       file: ./dist/index.js
       handlers:
