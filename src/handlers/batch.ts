@@ -2,6 +2,7 @@ import { Vec } from "@polkadot/types";
 import { Call as CallType } from "@polkadot/types/interfaces/runtime";
 import { SubstrateEvent } from "@subql/types";
 
+import { calculateFees } from "../helpers/fees";
 import {
   BatchRecord,
   BatchRecordReceiver,
@@ -81,6 +82,7 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
   const timestamp = event.block.timestamp;
   const blockNumber = event.block.block.header.number.toNumber();
   const signature = event.extrinsic?.extrinsic.signature.toString();
+  const fees = event.extrinsic ? calculateFees(event.extrinsic) : BigInt(0);
 
   const { name, decimals } = ensureToken(blockNumber);
 
@@ -111,6 +113,7 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
     // create BatchRecord
     const batchRecord = new BatchRecord(batchRecordId);
     batchRecord.extrinsicHash = extrinsicHash;
+    batchRecord.fees = fees;
     batchRecord.module = section;
     batchRecord.method = method;
     batchRecord.timestamp = timestamp;
