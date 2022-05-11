@@ -51,6 +51,7 @@ type BatchRecord @entity {
   cancelExtrinsicIdx: String
   callsStringArray: [String]
   extrinsicHash: String
+  fees: BigInt
   module: String # utility
   method: String # batch
   signature: String
