@@ -34,10 +34,11 @@ jobs:
         with:
           node-version: "16.x"
           cache: "yarn"
-          # cache-dependency-path: "yarn.lock"
+          cache-dependency-path: "yarn.lock"
 
       - name: Install dependencies
-        run: yarn install --immutable --immutable-cache --check-cache
+        run: yarn install
+        # --immutable --immutable-cache --check-cache
 
       - name: Patch chain
         run: yarn patchchain ${{ env.NETWORK }}
