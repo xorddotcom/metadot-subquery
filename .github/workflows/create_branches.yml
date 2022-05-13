@@ -18,18 +18,7 @@ jobs:
 
     strategy:
       matrix:
-        network:
-          [
-            astar,
-            bifrost_mainnet,
-            bifrost_testnet,
-            contextfree,
-            kusama,
-            polkadot,
-            shiden,
-            shibuya,
-            westend,
-          ]
+        network: [astar, bifrost_mainnet, bifrost_testnet, contextfree, kusama, polkadot, shiden, shibuya, westend]
       fail-fast: false
 
     env:

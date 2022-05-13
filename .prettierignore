@@ -1,5 +1,6 @@
 # directories
 .yarn/
+.github/**/*
 **/build
 **/dist
 **/node_modules
