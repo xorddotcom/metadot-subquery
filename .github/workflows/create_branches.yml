@@ -1,0 +1,74 @@
+name: Create all network branches
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+  # Allow workflow to be manually run from the GitHub UI
+  workflow_dispatch:
+
+jobs:
+  create-all-network-branches:
+    permissions: write-all
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        network:
+          [
+            astar,
+            bifrost_mainnet,
+            bifrost_testnet,
+            contextfree,
+            kusama,
+            polkadot,
+            shiden,
+            shibuya,
+            westend,
+          ]
+      fail-fast: false
+
+    env:
+      NETWORK: ${{ matrix.network }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: echo "NETWORK -> ${{ env.NETWORK }}"
+
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+          cache: "yarn"
+          cache-dependency-path: "yarn.lock"
+
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache
+
+      - name: Patch chain
+        run: yarn patchchain ${{ env.NETWORK }}
+
+      - name: Print project.yaml
+        run: cat ./project.yaml
+
+      - name: Delete branch
+        uses: dawidd6/action-delete-branch@v3
+        with:
+          github_token: ${{ github.token }}
+          branches: ${{ env.NETWORK }}
+          soft_fail: true
+
+      - name: Commit update
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Automated Commit
+          branch: ${{ env.NETWORK }}
+          create_branch: true
+          commit_options: "--no-verify"
+          skip_dirty_check: true
+          skip_checkout: true
