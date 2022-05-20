@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SubstrateEvent } from "@subql/types";
 
-import { ApproveRecord, ApproveStatus, Extrinsic, MultisigAccount, MultisigRecord } from "../types";
+import {
+  ApproveRecord,
+  ApproveStatus,
+  Extrinsic,
+  MultisigAccount,
+  MultisigRecord,
+  Transfer,
+} from "../types";
 import { ensureBlock } from "./block";
 
 export async function ensureMultisigAccount(
@@ -122,9 +129,12 @@ export async function executedMultisigHandler(event: SubstrateEvent): Promise<vo
   const multisigRecordId = `${multisigAccountId}-${timepointExtrinsicIdx}`;
 
   const multisigRecord = await MultisigRecord.get(`${multisigAccountId}-${timepointExtrinsicIdx}`);
-  if (!multisigRecord) {
-    return;
-  }
+  if (!multisigRecord) return;
+
+  const transferId = `${event.block.block.header.number.toNumber()}-${event.extrinsic?.extrinsic.hash.toString()}`;
+  logger.info("transferId >>> " + transferId);
+  const transfer = await Transfer.get(transferId);
+  logger.info("transfer status >>> " + transfer.status);
 
   // Save approve record.
   await saveApproveRecord(accountId, multisigAccountId, timepointExtrinsicIdx, callHash);
@@ -136,6 +146,7 @@ export async function executedMultisigHandler(event: SubstrateEvent): Promise<vo
   multisigRecord.confirmExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
   const approveRecords = await ApproveRecord.getByMultisigRecordId(multisigRecordId);
   multisigRecord.approvals = approveRecords.map((approveRecord) => approveRecord.account);
+  multisigRecord.transferId = transferId;
   await multisigRecord.save();
 }
 
@@ -178,6 +189,7 @@ export async function multisigHandler(event: SubstrateEvent): Promise<void> {
     }
 
     if (method === "MultisigExecuted") {
+      logger.info("executedMultisigHandler runing");
       await executedMultisigHandler(event);
     }
 

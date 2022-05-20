@@ -133,9 +133,10 @@ type MultisigRecord @entity {
   timestamp: Date
 
   status: ApproveStatus! # default/cancelled/confirmed
-  multisigAccount: MultisigAccount!
   block: Block!
   confirmBlock: Block
+  multisigAccount: MultisigAccount!
+  transfer: Transfer
 }
 
 type Transfer @entity {
