@@ -21,9 +21,7 @@ export async function ensureAccounts(ids: string[]): Promise<void> {
 
 export async function getAccountById(id: string): Promise<Account> {
   await ensureAccount(id);
-
   const account = await Account.get(id);
-
   return account;
 }
 

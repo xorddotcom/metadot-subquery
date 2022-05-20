@@ -1,4 +1,3 @@
-import { EventRecord } from "@polkadot/types/interfaces";
 import { SubstrateEvent } from "@subql/types";
 
 import { Event } from "../types";
@@ -9,19 +8,7 @@ import { multisigHandler } from "./multisig";
 import { swapHandler } from "./swap";
 import { transferCurrencyHandler, transferHandler } from "./transfer";
 
-export async function eventHandler(event: SubstrateEvent): Promise<{
-  index: number;
-  blockNumber: bigint;
-  blockHash: string;
-  events: EventRecord[];
-  section: string;
-  method: string;
-  data: string;
-  extrinsicHash: string | undefined;
-  id: string;
-  timestamp: Date;
-  save: () => Promise<void>;
-}> {
+export async function eventHandler(event: SubstrateEvent): Promise<void> {
   const index = event.idx;
   const blockNumber = event.block.block.header.number.toBigInt();
   const id = `${blockNumber}-${index}`;
@@ -36,63 +23,45 @@ export async function eventHandler(event: SubstrateEvent): Promise<{
       : event?.extrinsic?.extrinsic?.hash?.toString();
   const timestamp = event.block.timestamp;
 
-  const save = async (): Promise<void> => {
-    const entity = new Event(id);
+  await ensureBlock(blockHash);
 
-    await ensureBlock(blockHash);
-    if (extrinsicHash) {
-      const handler = await handleExtrinsic(event.extrinsic);
-      await handler.save();
-      entity.extrinsicId = extrinsicHash;
-    }
+  const entity = new Event(id);
+  if (extrinsicHash) {
+    await handleExtrinsic(event.extrinsic);
+    entity.extrinsicId = extrinsicHash;
+  }
+  entity.index = index;
+  entity.section = section;
+  entity.method = method;
+  entity.data = data;
+  entity.timestamp = timestamp;
+  entity.blockId = blockHash;
+  await entity.save();
 
-    entity.index = index;
-    entity.section = section;
-    entity.method = method;
-    entity.data = data;
-    entity.timestamp = timestamp;
-    entity.blockId = blockHash;
-    await entity.save();
+  // BATCH
+  if (
+    (section === "utility" && method === "BatchCompleted") ||
+    (section === "utility" && method === "BatchInterrupted")
+  ) {
+    // batchCompletedHandler
+    // batchInterruptedHandler
+    await batchHandler(event);
+  }
 
-    // BATCH
-    if (
-      (section === "utility" && method === "BatchCompleted") ||
-      (section === "utility" && method === "BatchInterrupted")
-    ) {
-      // batchCompletedHandler
-      // batchInterruptedHandler
-      await batchHandler(event);
-    }
+  // MULTISIG
+  if (section === "multisig") await multisigHandler(event);
 
-    // MULTISIG
-    if (section === "multisig") await multisigHandler(event);
+  // TRANSFER
+  if (section === "balances" && method === "Transfer") {
+    await transferHandler(event);
+  }
 
-    // TRANSFER
-    if (section === "balances" && method === "Transfer") {
-      await transferHandler(event);
-    }
+  if (section === "currencies" && method === "Transferred") {
+    await transferCurrencyHandler(event);
+  }
 
-    if (section === "currencies" && method === "Transferred") {
-      await transferCurrencyHandler(event);
-    }
-
-    // SWAP
-    if (section === "dex" && method === "Swap") {
-      await swapHandler(event);
-    }
-  };
-
-  return {
-    index,
-    blockNumber,
-    blockHash,
-    events,
-    section,
-    method,
-    data,
-    extrinsicHash,
-    id,
-    timestamp,
-    save,
-  };
+  // SWAP
+  if (section === "dex" && method === "Swap") {
+    await swapHandler(event);
+  }
 }

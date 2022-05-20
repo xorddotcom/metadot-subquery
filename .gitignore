@@ -5,6 +5,7 @@
 
 # directories
 .yarn/*
+.yarn/cache/*
 !.yarn/patches
 !.yarn/releases
 !.yarn/plugins
