@@ -40,7 +40,7 @@ const checkIfBatchTransfer = (values: Value[]): { hasTransfer: boolean; transfer
   for (let k = 0; k < values.length; k++) {
     const value: Value = values[k];
     // check if transfer
-    if (value?.args?.dest) {
+    if (value?.args?.dest || value?.args?.dest?.id) {
       hasTransfer = true;
       transferCount = transferCount + 1;
     } else {
@@ -140,6 +140,7 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
 
       // check if transfer otherwise break
       if (!value.args.dest) break;
+      if (!value.args.dest.id) break;
 
       const {
         args: {

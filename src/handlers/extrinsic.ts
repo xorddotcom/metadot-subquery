@@ -13,21 +13,7 @@ export async function ensureExtrinsic(id: string): Promise<void> {
   }
 }
 
-export async function handleExtrinsic(extrinsic: SubstrateExtrinsic): Promise<{
-  id: string;
-  method: string;
-  section: string;
-  args: () => string;
-  signer: string;
-  nonce: bigint;
-  timestamp: Date;
-  blockHash: string;
-  isSigned: boolean;
-  signature: string;
-  tip: bigint;
-  isSuccess: boolean;
-  save: () => Promise<void>;
-}> {
+export async function handleExtrinsic(extrinsic: SubstrateExtrinsic): Promise<void> {
   const id = extrinsic?.extrinsic?.hash?.toString();
   const method = extrinsic?.extrinsic.method.method;
   const section = extrinsic?.extrinsic.method.section;
@@ -51,40 +37,20 @@ export async function handleExtrinsic(extrinsic: SubstrateExtrinsic): Promise<{
   const tip = extrinsic?.extrinsic.tip.toBigInt() || BigInt(0);
   const isSuccess = checkIfExtrinsicExecuteSuccess(extrinsic);
 
-  const save = async (): Promise<void> => {
-    const entity = new Extrinsic(id);
+  await ensureBlock(blockHash);
+  await ensureAccount(signer);
 
-    await ensureBlock(blockHash);
-    await ensureAccount(signer);
-
-    entity.method = method;
-    entity.section = section;
-    entity.args = args();
-    entity.signerId = signer;
-    entity.nonce = nonce;
-    entity.isSigned = isSigned;
-    entity.timestamp = timestamp;
-    entity.signature = signature;
-    entity.tip = tip;
-    entity.isSuccess = isSuccess;
-    entity.blockId = blockHash;
-
-    await entity.save();
-  };
-
-  return {
-    id,
-    method,
-    section,
-    args,
-    signer,
-    nonce,
-    timestamp,
-    blockHash,
-    isSigned,
-    signature,
-    tip,
-    isSuccess,
-    save,
-  };
+  const entity = new Extrinsic(id);
+  entity.args = args();
+  entity.isSigned = isSigned;
+  entity.isSuccess = isSuccess;
+  entity.method = method;
+  entity.nonce = nonce;
+  entity.section = section;
+  entity.signature = signature;
+  entity.timestamp = timestamp;
+  entity.tip = tip;
+  entity.blockId = blockHash;
+  entity.signerId = signer;
+  await entity.save();
 }
