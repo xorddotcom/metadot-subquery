@@ -77,7 +77,7 @@ export async function ensureBatchRecordSender(id: string): Promise<void> {
 export async function batchHandler(event: SubstrateEvent): Promise<void> {
   const blockId = event.block.block.hash.toString();
   const signer = event.extrinsic?.extrinsic.signer.toString();
-  const extrinsicHash = event.extrinsic?.extrinsic?.hash?.toString();
+  const extrinsicHash = event.extrinsic?.extrinsic.hash.toString();
 
   const timestamp = event.block.timestamp;
   const blockNumber = event.block.block.header.number.toNumber();
@@ -85,6 +85,12 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
   const fees = event.extrinsic ? calculateFees(event.extrinsic) : BigInt(0);
 
   const { name, decimals } = ensureToken(blockNumber);
+
+  if (!extrinsicHash) {
+    logger.info("blockNumber >>> " + blockNumber);
+    logger.info("extrinsicHash >>> " + extrinsicHash);
+    return;
+  }
 
   const extrinsicRecord = await Extrinsic.get(extrinsicHash);
   const args: Arg[] = JSON.parse(extrinsicRecord.args);
