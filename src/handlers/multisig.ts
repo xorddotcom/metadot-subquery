@@ -1,14 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SubstrateEvent } from "@subql/types";
 
-import {
-  ApproveRecord,
-  ApproveStatus,
-  Extrinsic,
-  MultisigAccount,
-  MultisigRecord,
-  Transfer,
-} from "../types";
+import { calculateFees } from "../helpers/fees";
+import { ApproveRecord, ApproveStatus, Extrinsic, MultisigAccount, MultisigRecord } from "../types";
 import { ensureBlock } from "./block";
 
 export async function ensureMultisigAccount(
@@ -20,22 +14,20 @@ export async function ensureMultisigAccount(
   if (entity === undefined) {
     entity = new MultisigAccount(multisigAccountId);
     const jsonExtrinsicArgs = JSON.parse(extrinsicArgs) as any[];
-    let threshold = 0;
     let members: string[] = [];
+    let threshold = 0;
 
     jsonExtrinsicArgs.forEach((arg) => {
-      if (arg.name === "threshold") {
-        threshold = Number(arg.value);
-      }
-
       if (arg.name === "otherSignatories" || arg.name === "other_signatories") {
         members = [sender, ...arg.value];
       }
+      if (arg.name === "threshold") {
+        threshold = Number(arg.value);
+      }
     });
 
-    entity.threshold = threshold;
     entity.members = members;
-
+    entity.threshold = threshold;
     await entity.save();
   }
 }
@@ -71,14 +63,14 @@ export async function newMultisigHandler(event: SubstrateEvent): Promise<void> {
 
   // Save new multisig record.
   const entity = new MultisigRecord(`${multisigAccountId}-${extrinsicIdx}`);
+  entity.approvals = [accountId];
   entity.createExtrinsicIdx = extrinsicIdx;
   entity.module = event.event.section;
   entity.method = event.event.method;
-  entity.multisigAccountId = multisigAccountId;
   entity.timestamp = event.block.timestamp;
-  entity.blockId = event.block.block.header.hash.toString();
   entity.status = ApproveStatus.default;
-  entity.approvals = [accountId];
+  entity.blockId = event.block.block.header.hash.toString();
+  entity.multisigAccountId = multisigAccountId;
   await entity.save();
 
   // Save approve record.
@@ -100,9 +92,7 @@ export async function approveMultisigHandler(event: SubstrateEvent): Promise<voi
   const extrinsicIdx = `${timepoint.height}-${timepoint.index}`;
 
   const multisigRecord = await MultisigRecord.get(`${multisigAccountId}-${extrinsicIdx}`);
-  if (!multisigRecord) {
-    return;
-  }
+  if (!multisigRecord) return;
 
   await saveApproveRecord(accountId, multisigAccountId, extrinsicIdx, callHash);
 
@@ -131,21 +121,19 @@ export async function executedMultisigHandler(event: SubstrateEvent): Promise<vo
   const multisigRecord = await MultisigRecord.get(`${multisigAccountId}-${timepointExtrinsicIdx}`);
   if (!multisigRecord) return;
 
-  const transferId = `${event.block.block.header.number.toNumber()}-${event.extrinsic?.extrinsic.hash.toString()}`;
-  logger.info("transferId >>> " + transferId);
-  const transfer = await Transfer.get(transferId);
-  logger.info("transfer status >>> " + transfer.status);
-
   // Save approve record.
   await saveApproveRecord(accountId, multisigAccountId, timepointExtrinsicIdx, callHash);
 
   // Update multisig record.
+  const transferId = `${event.block.block.header.number.toNumber()}-${event.extrinsic?.extrinsic.hash.toString()}`;
   const blockNumber = event.block.block.header.number;
-  multisigRecord.status = ApproveStatus.confirmed;
-  multisigRecord.confirmBlockId = currentBlockId;
-  multisigRecord.confirmExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
+  const fees = event.extrinsic ? calculateFees(event.extrinsic) : BigInt(0);
   const approveRecords = await ApproveRecord.getByMultisigRecordId(multisigRecordId);
   multisigRecord.approvals = approveRecords.map((approveRecord) => approveRecord.account);
+  multisigRecord.confirmExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
+  multisigRecord.fees = fees;
+  multisigRecord.status = ApproveStatus.confirmed;
+  multisigRecord.confirmBlockId = currentBlockId;
   multisigRecord.transferId = transferId;
   await multisigRecord.save();
 }
@@ -159,19 +147,16 @@ export async function cancelledMultisigHandler(event: SubstrateEvent): Promise<v
 
   // Get multisig timepoint.
   const timepoint = data[1].toJSON() as any;
+  const timepointExtrinsicIdx = `${timepoint.height}-${timepoint.index}`;
   const multisigAccountId = data[2].toString();
 
-  const timepointExtrinsicIdx = `${timepoint.height}-${timepoint.index}`;
-
   const multisigRecord = await MultisigRecord.get(`${multisigAccountId}-${timepointExtrinsicIdx}`);
-  if (!multisigRecord) {
-    return;
-  }
+  if (!multisigRecord) return;
 
   // Update multisig record.
   const blockNumber = event.block.block.header.number;
-  multisigRecord.status = ApproveStatus.cancelled;
   multisigRecord.cancelExtrinsicIdx = `${blockNumber}-${event.extrinsic?.idx}`;
+  multisigRecord.status = ApproveStatus.cancelled;
   await multisigRecord.save();
 }
 

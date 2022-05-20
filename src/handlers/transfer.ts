@@ -30,15 +30,14 @@ export async function transferHandler(event: SubstrateEvent): Promise<void> {
   await ensureBlock(blockId);
 
   const entity = new Transfer(`${blockNumber}-${extrinsicHash}`);
+  entity.amount = transformedAmount;
+  entity.extrinsicHash = extrinsicHash;
+  entity.fees = fees;
+  entity.status = isSuccess;
+  entity.timestamp = timestamp;
+  entity.blockId = blockId;
   entity.fromId = from;
   entity.toId = to;
   entity.token = { name, decimals };
-  entity.amount = transformedAmount;
-  entity.timestamp = timestamp;
-  entity.extrinsicHash = extrinsicHash;
-  entity.status = isSuccess;
-  entity.fees = fees;
-  entity.blockId = blockId;
-
   await entity.save();
 }

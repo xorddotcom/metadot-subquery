@@ -40,7 +40,7 @@ const checkIfBatchTransfer = (values: Value[]): { hasTransfer: boolean; transfer
   for (let k = 0; k < values.length; k++) {
     const value: Value = values[k];
     // check if transfer
-    if (value?.args?.dest) {
+    if (value?.args?.dest || value?.args?.dest?.id) {
       hasTransfer = true;
       transferCount = transferCount + 1;
     } else {
