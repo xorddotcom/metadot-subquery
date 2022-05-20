@@ -54,7 +54,7 @@ export async function eventHandler(event: SubstrateEvent): Promise<void> {
   if (section === "balances" && method === "Transfer") {
     await transferHandler(event);
   }
-  
+
   if (section === "currencies" && method === "Transferred") {
     await transferCurrencyHandler(event);
   }
