@@ -140,6 +140,7 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
 
       // check if transfer otherwise break
       if (!value.args.dest) break;
+      if (!value.args.dest.id) break;
 
       const {
         args: {
