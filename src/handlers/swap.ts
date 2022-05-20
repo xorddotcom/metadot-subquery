@@ -28,10 +28,6 @@ export async function swapHandler(event: SubstrateEvent): Promise<void> {
   });
   const amounts: string[] = JSON.parse(kvData[2].value);
 
-  // logger.info("accountId >>> " + accountId);
-  // logger.info("tokenNames >>> " + JSON.stringify(tokenNames));
-  // logger.info("amounts >>> " + JSON.stringify(amounts));
-
   if (tokenNames.length !== amounts.length) return;
 
   const data = tokenNames.map((tokenName, i) => {
