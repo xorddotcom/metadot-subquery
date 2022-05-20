@@ -174,7 +174,6 @@ export async function multisigHandler(event: SubstrateEvent): Promise<void> {
     }
 
     if (method === "MultisigExecuted") {
-      logger.info("executedMultisigHandler runing");
       await executedMultisigHandler(event);
     }
 
