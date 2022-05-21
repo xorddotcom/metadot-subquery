@@ -2,7 +2,14 @@
 import { SubstrateEvent } from "@subql/types";
 
 import { calculateFees } from "../helpers/fees";
-import { ApproveRecord, ApproveStatus, Extrinsic, MultisigAccount, MultisigRecord } from "../types";
+import {
+  ApproveRecord,
+  ApproveStatus,
+  Extrinsic,
+  MultisigAccount,
+  MultisigRecord,
+  Transfer,
+} from "../types";
 import { ensureBlock } from "./block";
 
 export async function ensureMultisigAccount(
@@ -46,7 +53,8 @@ export async function saveApproveRecord(
 }
 
 export async function newMultisigHandler(event: SubstrateEvent): Promise<void> {
-  await ensureBlock(event.block.block.header.hash.toString());
+  const blockId = event.block.block.hash.toString();
+  await ensureBlock(blockId);
   const {
     event: { data },
   } = event;
@@ -58,7 +66,6 @@ export async function newMultisigHandler(event: SubstrateEvent): Promise<void> {
   const callHash = data[2].toString();
 
   const extrinsicRecord = await Extrinsic.get(event.extrinsic?.extrinsic?.hash?.toString());
-
   await ensureMultisigAccount(multisigAccountId, accountId, extrinsicRecord.args);
 
   // Save new multisig record.
@@ -69,7 +76,7 @@ export async function newMultisigHandler(event: SubstrateEvent): Promise<void> {
   entity.method = event.event.method;
   entity.timestamp = event.block.timestamp;
   entity.status = ApproveStatus.default;
-  entity.blockId = event.block.block.header.hash.toString();
+  entity.blockId = blockId;
   entity.multisigAccountId = multisigAccountId;
   await entity.save();
 
@@ -78,7 +85,8 @@ export async function newMultisigHandler(event: SubstrateEvent): Promise<void> {
 }
 
 export async function approveMultisigHandler(event: SubstrateEvent): Promise<void> {
-  await ensureBlock(event.block.block.header.hash.toString());
+  const blockId = event.block.block.hash.toString();
+  await ensureBlock(blockId);
 
   const {
     event: { data },
@@ -120,6 +128,28 @@ export async function executedMultisigHandler(event: SubstrateEvent): Promise<vo
 
   const multisigRecord = await MultisigRecord.get(`${multisigAccountId}-${timepointExtrinsicIdx}`);
   if (!multisigRecord) return;
+
+  const extrinsicHash = event.extrinsic?.extrinsic.hash.toString();
+  const blockNumber = event.block.block.header.number;
+
+  if (!extrinsicHash) {
+    logger.info("blockNumber >>> " + blockNumber);
+    logger.info("extrinsicHash >>> " + extrinsicHash);
+    return;
+  }
+
+  const transferId = `${event.block.block.header.number.toNumber()}-${extrinsicHash}`;
+  const fees = event.extrinsic ? calculateFees(event.extrinsic) : BigInt(0);
+  const approveRecords = await ApproveRecord.getByMultisigRecordId(multisigRecordId);
+
+  // ensure tranfer entity exists before storing otherwise return
+  const transfer = await Transfer.get(transferId);
+  const transferPresent = transfer?.amount || transfer?.timestamp ? true : false;
+  logger.info("transfer amount >>> " + transfer?.amount);
+  logger.info("transfer status >>> " + transfer?.status);
+
+  // return if transfer not present in multisig
+  if (!transferPresent) return;
 
   // Save approve record.
   await saveApproveRecord(accountId, multisigAccountId, timepointExtrinsicIdx, callHash);
