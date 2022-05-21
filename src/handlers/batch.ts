@@ -86,6 +86,12 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
 
   const { name, decimals } = ensureToken(blockNumber);
 
+  if (!extrinsicHash) {
+    logger.info("blockNumber >>> " + blockNumber);
+    logger.info("extrinsicHash >>> " + extrinsicHash);
+    return;
+  }
+
   const extrinsicRecord = await Extrinsic.get(extrinsicHash);
   const args: Arg[] = JSON.parse(extrinsicRecord.args);
 
