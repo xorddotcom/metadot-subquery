@@ -37,13 +37,17 @@ jobs:
           cache-dependency-path: "yarn.lock"
 
       - name: Install dependencies
-        run: yarn install --immutable --immutable-cache --check-cache
+        run: yarn install
+        # --immutable --immutable-cache --check-cache
 
       - name: Patch chain
         run: yarn patchchain ${{ env.NETWORK }}
 
       - name: Print project.yaml
         run: cat ./project.yaml
+
+      - name: Build project
+        run: yarn codegen && yarn build
 
       - name: Delete branch
         uses: dawidd6/action-delete-branch@v3

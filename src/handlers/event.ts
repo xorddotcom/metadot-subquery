@@ -35,7 +35,6 @@ export async function eventHandler(event: SubstrateEvent): Promise<void> {
   entity.data = data;
   entity.timestamp = timestamp;
   entity.blockId = blockId;
-
   await entity.save();
 
   // BATCH
