@@ -45,6 +45,9 @@ jobs:
       - name: Print project.yaml
         run: cat ./project.yaml
 
+      - name: Build project
+        run: yarn codegen && yarn build
+
       - name: Delete branch
         uses: dawidd6/action-delete-branch@v3
         with:
