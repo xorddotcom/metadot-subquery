@@ -12,8 +12,7 @@ export async function eventHandler(event: SubstrateEvent): Promise<void> {
   const index = event.idx;
   const blockNumber = event.block.block.header.number.toBigInt();
   const id = `${blockNumber}-${index}`;
-  const blockHash = event.block.block.hash.toString();
-  const events = event.block.events;
+  const blockId = event.block.block.hash.toString();
   const section = event.event.section;
   const method = event.event.method;
   const data = event.event.data.toString();
@@ -23,7 +22,7 @@ export async function eventHandler(event: SubstrateEvent): Promise<void> {
       : event?.extrinsic?.extrinsic?.hash?.toString();
   const timestamp = event.block.timestamp;
 
-  await ensureBlock(blockHash);
+  await ensureBlock(blockId);
 
   const entity = new Event(id);
   if (extrinsicHash) {
@@ -35,7 +34,8 @@ export async function eventHandler(event: SubstrateEvent): Promise<void> {
   entity.method = method;
   entity.data = data;
   entity.timestamp = timestamp;
-  entity.blockId = blockHash;
+  entity.blockId = blockId;
+
   await entity.save();
 
   // BATCH
