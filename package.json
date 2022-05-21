@@ -53,6 +53,7 @@
     "postinstall": "husky install",
     "prepack": "yarn clean && yarn build",
     "start": "./scripts/start.sh",
+    "sudo:rm": "./scripts/sudo_rm.sh",
     "prettier": "prettier --config ./.prettierrc.yaml --ignore-path ./.prettierignore --write \"./src/**/*.{js,json,md,ts,yaml,yml}\"",
     "prettier:check": "prettier --check --config ./.prettierrc.yaml --ignore-path ./.prettierignore \"./src/**/*.{js,json,md,ts,yaml,yml}\"",
     "typecheck": "tsc --noEmit"

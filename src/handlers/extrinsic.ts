@@ -31,13 +31,13 @@ export async function handleExtrinsic(extrinsic: SubstrateExtrinsic): Promise<vo
   const signer = extrinsic?.extrinsic?.signer?.toString();
   const nonce = extrinsic?.extrinsic?.nonce?.toBigInt() || BigInt(0);
   const timestamp = extrinsic?.block.timestamp;
-  const blockHash = extrinsic?.block?.block?.hash?.toString();
+  const blockId = extrinsic?.block?.block?.hash?.toString();
   const isSigned = extrinsic?.extrinsic.isSigned;
   const signature = extrinsic?.extrinsic.signature.toString();
   const tip = extrinsic?.extrinsic.tip.toBigInt() || BigInt(0);
   const isSuccess = checkIfExtrinsicExecuteSuccess(extrinsic);
 
-  await ensureBlock(blockHash);
+  await ensureBlock(blockId);
   await ensureAccount(signer);
 
   const entity = new Extrinsic(id);
@@ -50,7 +50,7 @@ export async function handleExtrinsic(extrinsic: SubstrateExtrinsic): Promise<vo
   entity.signature = signature;
   entity.timestamp = timestamp;
   entity.tip = tip;
-  entity.blockId = blockHash;
+  entity.blockId = blockId;
   entity.signerId = signer;
   await entity.save();
 }
