@@ -37,7 +37,7 @@ jobs:
           cache-dependency-path: "yarn.lock"
 
       - name: Install dependencies
-        run: yarn install --immutable --immutable-cache --check-cache
+        run: yarn install
 
       - name: Patch chain
         run: yarn patchchain ${{ env.NETWORK }}
