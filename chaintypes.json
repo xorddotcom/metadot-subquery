@@ -4,12 +4,19 @@
       "contextfree": {
         "types": [
           {
-            "minmax": [0, null],
+            "minmax": [
+              0,
+              null
+            ],
             "types": {
               "ResourceId": "[u8; 32]",
               "DepositNonce": "u64",
               "ProposalStatus": {
-                "_enum": ["Initiated", "Approved", "Rejected"]
+                "_enum": [
+                  "Initiated",
+                  "Approved",
+                  "Rejected"
+                ]
               },
               "ProposalVotes": {
                 "votes_for": "Vec<AccountId>",
@@ -31,7 +38,10 @@
               "ProjectId": "u32",
               "ChainIndex": "u32",
               "Protocol": {
-                "_enum": ["Solidity", "Substrate"]
+                "_enum": [
+                  "Solidity",
+                  "Substrate"
+                ]
               },
               "Chain": {
                 "_protocol": "Protocol"
@@ -49,7 +59,9 @@
                 }
               },
               "SubstrateStrategy": {
-                "_enum": ["NativeBalance"]
+                "_enum": [
+                  "NativeBalance"
+                ]
               },
               "Strategy": {
                 "_enum": {
@@ -73,7 +85,10 @@
                 "workspaces": "Vec<Workspace>"
               },
               "VotingFormat": {
-                "_enum": ["SingleChoice", "SplitVote"]
+                "_enum": [
+                  "SingleChoice",
+                  "SplitVote"
+                ]
               },
               "OptionIndex": "u8",
               "PrivacyLevel": {
