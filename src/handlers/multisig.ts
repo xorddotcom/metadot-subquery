@@ -137,6 +137,16 @@ export async function executedMultisigHandler(event: SubstrateEvent): Promise<vo
     logger.info("extrinsicHash >>> " + extrinsicHash);
     return;
   }
+  const transferId = `${event.block.block.header.number.toNumber()}-${extrinsicHash}`;
+  const fees = event.extrinsic ? calculateFees(event.extrinsic) : BigInt(0);
+  const approveRecords = await ApproveRecord.getByMultisigRecordId(multisigRecordId);
+
+  // ensure tranfer entity exists before storing otherwise return
+  const transfer = await Transfer.get(transferId);
+  const transferPresent = transfer?.amount || transfer?.timestamp ? true : false;
+
+  // return if transfer not present in multisig
+  if (!transferPresent) return;
 
   const transferId = `${event.block.block.header.number.toNumber()}-${extrinsicHash}`;
   const fees = event.extrinsic ? calculateFees(event.extrinsic) : BigInt(0);
@@ -198,6 +208,7 @@ export async function multisigHandler(event: SubstrateEvent): Promise<void> {
     }
 
     if (method === "MultisigExecuted") {
+      logger.info("executedMultisigHandler runing");
       await executedMultisigHandler(event);
     }
 
