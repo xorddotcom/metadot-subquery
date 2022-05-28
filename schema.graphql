@@ -9,6 +9,11 @@ enum BatchStatus {
   interrupted
 }
 
+type SwapData @jsonField {
+  token: String
+  amount: String
+}
+
 type TokenData @jsonField {
   name: String
   decimals: String
@@ -24,6 +29,7 @@ type Account @entity {
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
   transferFrom: [Transfer] @derivedFrom(field: "from")
   transferTo: [Transfer] @derivedFrom(field: "to")
+  swaps: [SwapRecord] @derivedFrom(field: "from")
 }
 
 type ApproveRecord @entity {
@@ -137,6 +143,18 @@ type MultisigRecord @entity {
   confirmBlock: Block
   multisigAccount: MultisigAccount!
   transfer: Transfer
+}
+
+type SwapRecord @entity {
+  id: ID! # blockNumber-extrinsicHash
+  extrinsicHash: String
+  fees: BigInt
+  status: Boolean
+  timestamp: Date
+
+  block: Block
+  data: [SwapData]
+  from: Account
 }
 
 type Transfer @entity {
