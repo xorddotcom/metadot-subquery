@@ -1,0 +1,46 @@
+name: Build for all networks
+
+on:
+  push:
+    branches:
+      - dev
+
+  # Allow workflow to be manually run from the GitHub UI
+  workflow_dispatch:
+
+jobs:
+  create-all-network-branches:
+    permissions: write-all
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        network: [acala, astar, bifrost_mainnet, bifrost_testnet, contextfree, kusama, karura, polkadot, shiden, shibuya, westend]
+      fail-fast: false
+
+    env:
+      NETWORK: ${{ matrix.network }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: echo "NETWORK -> ${{ env.NETWORK }}"
+
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+          cache: "yarn"
+          cache-dependency-path: "yarn.lock"
+
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+
+      - name: Patch chain
+        run: yarn patchchain ${{ env.NETWORK }}
+
+      - name: Print project.yaml
+        run: cat ./project.yaml
+
+      - name: Build project
+        run: yarn codegen && yarn build
