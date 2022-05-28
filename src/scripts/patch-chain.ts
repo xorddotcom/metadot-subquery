@@ -53,6 +53,7 @@ function patchManifest(manifest) {
   const chainId = commandlineInput.chainId ? commandlineInput.chainId : obj.chainId;
   const endpoint = commandlineInput.endpoint ? commandlineInput.endpoint : obj.endpoint;
   const dictionary = commandlineInput.dictionary ? commandlineInput.dictionary : obj.dictionary;
+  const chaintypes = obj.chaintypes;
 
   // delete chaintypes.json
   if (fs.existsSync(CHAINTYPES_PATH)) {
@@ -70,6 +71,14 @@ function patchManifest(manifest) {
 
   if (dictionary) {
     _manifest["network"].dictionary = dictionary;
+  }
+
+  // create chaintypes file if chaintypes exist
+  if (chaintypes) {
+    fs.writeFileSync(path.resolve(CHAINTYPES_PATH), JSON.stringify(chaintypes, null, 2), {
+      encoding: "utf-8",
+    });
+    _manifest["network"].chaintypes = { file: "./chaintypes.json" };
   }
 
   return _manifest;

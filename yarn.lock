@@ -5,6 +5,15 @@ __metadata:
   version: 6
   cacheKey: 8
 
+"@acala-network/type-definitions@npm:^4.1.3":
+  version: 4.1.3
+  resolution: "@acala-network/type-definitions@npm:4.1.3"
+  dependencies:
+    "@open-web3/orml-type-definitions": ^1.1.4
+  checksum: 7312c276224c3ba6d57e44aacf3205b76815fc00c8a9d31ad293969b6a8c7376057ffb30c1540bf413c6e83717e4e21fb34cd3a50218d48761745884cd7a1648
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.16.7":
   version: 7.16.7
   resolution: "@babel/code-frame@npm:7.16.7"
@@ -1168,6 +1177,15 @@ __metadata:
   dependencies:
     "@octokit/openapi-types": ^11.2.0
   checksum: f122b9aee8f6baddd515e34a0913e73b21d4bc82d6ee59d77a8aaf01b4a02c10867dd013003d087a83dc96db23511893669015af6d30c27cece185e21cf1df89
+  languageName: node
+  linkType: hard
+
+"@open-web3/orml-type-definitions@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "@open-web3/orml-type-definitions@npm:1.1.4"
+  dependencies:
+    lodash.merge: ^4.6.2
+  checksum: 7a6aaef419db46346ec9449cab6b5b12f0a80779ba036561521e0f84bbed85e7a5e243409276d1dd5ace1d1446ca7a188e1133e9c031156b16faf282f3960344
   languageName: node
   linkType: hard
 
@@ -6503,6 +6521,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "metadot-multisig@workspace:."
   dependencies:
+    "@acala-network/type-definitions": ^4.1.3
     "@commitlint/cli": ^17.0.0
     "@commitlint/config-conventional": ^17.0.0
     "@polkadot/api": ^8.4.2
