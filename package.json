@@ -1,7 +1,7 @@
 {
   "name": "metadot-multisig",
   "description": "multisig subquery for metadot",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "Ahmed Ali",
     "url": "https://github.com/ahmedali8"
