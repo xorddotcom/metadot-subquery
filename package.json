@@ -1,12 +1,13 @@
 {
   "name": "metadot-multisig",
   "description": "multisig subquery for metadot",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "Ahmed Ali",
     "url": "https://github.com/ahmedali8"
   },
   "devDependencies": {
+    "@acala-network/type-definitions": "^4.1.3",
     "@commitlint/cli": "^17.0.0",
     "@commitlint/config-conventional": "^17.0.0",
     "@polkadot/api": "^8.4.2",
