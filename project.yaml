@@ -13,12 +13,14 @@ repository: https://github.com/ahmedali8/metadot-subql
 schema:
   file: ./schema.graphql
 network:
-  chainId:
-  endpoint:
-  dictionary:
+  chainId: "0x8b290fa39a8808f29d7309ea99442c95bf964838aef14be5a6449ae48f8a5f1f"
+  endpoint: wss://bifrost-rpc.testnet.liebi.com/ws
+  dictionary: https://api.subquery.network/sq/subquery/bifrost-parachain-dictionary
+  chaintypes:
+    file: ./chaintypes.json
 dataSources:
   - kind: substrate/Runtime
-    startBlock:
+    startBlock: 180859
     mapping:
       file: ./dist/index.js
       handlers:
