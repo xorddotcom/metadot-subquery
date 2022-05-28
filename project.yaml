@@ -13,12 +13,12 @@ repository: https://github.com/ahmedali8/metadot-subql
 schema:
   file: ./schema.graphql
 network:
-  chainId:
-  endpoint:
-  dictionary:
+  chainId: "0xfc41b9bd8ef8fe53d58c7ea67c794c7ec9a73daf05e6d54b14ff6342c99ba64c"
+  endpoint: wss://acala-polkadot.api.onfinality.io/public-ws
+  dictionary: https://api.subquery.network/sq/subquery/acala-dictionary
 dataSources:
   - kind: substrate/Runtime
-    startBlock:
+    startBlock: 910989
     mapping:
       file: ./dist/index.js
       handlers:
@@ -49,6 +49,11 @@ dataSources:
           filter:
             module: balances
             method: Transfer
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: currencies
+            method: Transferred
         - handler: handleEvent
           kind: substrate/EventHandler
           filter:
