@@ -148,6 +148,17 @@ export async function executedMultisigHandler(event: SubstrateEvent): Promise<vo
   // return if transfer not present in multisig
   if (!transferPresent) return;
 
+  const transferId = `${event.block.block.header.number.toNumber()}-${extrinsicHash}`;
+  const fees = event.extrinsic ? calculateFees(event.extrinsic) : BigInt(0);
+  const approveRecords = await ApproveRecord.getByMultisigRecordId(multisigRecordId);
+
+  // ensure tranfer entity exists before storing otherwise return
+  const transfer = await Transfer.get(transferId);
+  const transferPresent = transfer?.amount || transfer?.timestamp ? true : false;
+
+  // return if transfer not present in multisig
+  if (!transferPresent) return;
+
   // Save approve record.
   await saveApproveRecord(accountId, multisigAccountId, timepointExtrinsicIdx, callHash);
 

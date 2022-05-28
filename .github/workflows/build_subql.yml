@@ -1,12 +1,9 @@
-name: Create all network branches
+name: Build for all networks
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  pull_request:
+  push:
     branches:
-      - main
+      - dev
 
   # Allow workflow to be manually run from the GitHub UI
   workflow_dispatch:
@@ -18,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        network: [astar, bifrost_mainnet, bifrost_testnet, contextfree, kusama, polkadot, shiden, shibuya, westend]
+        network: [acala, astar, bifrost_mainnet, bifrost_testnet, contextfree, kusama, karura, polkadot, shiden, shibuya, westend]
       fail-fast: false
 
     env:
@@ -47,20 +44,3 @@ jobs:
 
       - name: Build project
         run: yarn codegen && yarn build
-
-      - name: Delete branch
-        uses: dawidd6/action-delete-branch@v3
-        with:
-          github_token: ${{ github.token }}
-          branches: ${{ env.NETWORK }}
-          soft_fail: true
-
-      - name: Commit update
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Automated Commit
-          branch: ${{ env.NETWORK }}
-          create_branch: true
-          commit_options: "--no-verify"
-          skip_dirty_check: true
-          skip_checkout: true
