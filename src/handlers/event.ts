@@ -5,7 +5,7 @@ import { batchHandler } from "./batch";
 import { ensureBlock } from "./block";
 import { handleExtrinsic } from "./extrinsic";
 import { multisigHandler } from "./multisig";
-import { transferHandler } from "./transfer";
+import { transferCurrencyHandler, transferHandler } from "./transfer";
 
 export async function eventHandler(event: SubstrateEvent): Promise<void> {
   const index = event.idx;
@@ -52,5 +52,9 @@ export async function eventHandler(event: SubstrateEvent): Promise<void> {
   // TRANSFER
   if (section === "balances" && method === "Transfer") {
     await transferHandler(event);
+  }
+
+  if (section === "currencies" && method === "Transferred") {
+    await transferCurrencyHandler(event);
   }
 }
