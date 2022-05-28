@@ -1,5 +1,7 @@
 # SubQuery - Starter Package
 
+Note: swap and multi-tokens implemented
+
 The Starter Package is an example that you can use as a starting point for developing your SubQuery project.
 A SubQuery package defines which data The SubQuery will index from the Substrate blockchain, and how it will store it.
 

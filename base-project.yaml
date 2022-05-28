@@ -59,6 +59,11 @@ dataSources:
         - handler: handleEvent
           kind: substrate/EventHandler
           filter:
+            module: currencies
+            method: Transferred
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
             module: utility
             method: BatchCompleted
         - handler: handleEvent
@@ -66,3 +71,8 @@ dataSources:
           filter:
             module: utility
             method: BatchInterrupted
+        - handler: handleEvent
+          kind: substrate/EventHandler
+          filter:
+            module: dex
+            method: Swap
