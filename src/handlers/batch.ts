@@ -77,7 +77,7 @@ export async function ensureBatchRecordSender(id: string): Promise<void> {
 export async function batchHandler(event: SubstrateEvent): Promise<void> {
   const blockId = event.block.block.hash.toString();
   const signer = event.extrinsic?.extrinsic.signer.toString();
-  const extrinsicHash = event.extrinsic?.extrinsic?.hash?.toString();
+  const extrinsicHash = event.extrinsic?.extrinsic.hash.toString();
 
   const timestamp = event.block.timestamp;
   const blockNumber = event.block.block.header.number.toNumber();
