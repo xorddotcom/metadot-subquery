@@ -13,12 +13,13 @@ repository: https://github.com/ahmedali8/metadot-subql
 schema:
   file: ./schema.graphql
 network:
-  chainId:
-  endpoint:
-  dictionary:
+  chainId: "0x9f28c6a68e0fc9646eff64935684f6eeeece527e37bbe1f213d22caa1d9d6bed"
+  endpoint: wss://bifrost-rpc.liebi.com/ws
+  chaintypes:
+    file: ./chaintypes.json
 dataSources:
   - kind: substrate/Runtime
-    startBlock:
+    startBlock: 1654897
     mapping:
       file: ./dist/index.js
       handlers:
