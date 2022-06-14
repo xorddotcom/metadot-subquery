@@ -22,7 +22,11 @@ interface Value {
     dest: {
       id: string;
     };
-    value: string;
+    value?: string;
+    amount?: string;
+    currency_id?: {
+      token?: string;
+    };
   };
 }
 
@@ -153,12 +157,20 @@ export async function batchHandler(event: SubstrateEvent): Promise<void> {
       if (!value.args.dest) break;
       if (!value.args.dest.id) break;
 
-      const {
-        args: {
-          dest: { id: receiver },
-          value: amount,
-        },
-      } = value;
+      const receiver = value.args.dest.id;
+      let amount: string;
+
+      if (value.args?.value) {
+        amount = value.args.value;
+      }
+      if (value.args?.amount) {
+        amount = value.args.amount;
+      }
+
+      if (value.args?.currency_id?.token) {
+        logger.info("token >>> " + value.args?.currency_id?.token);
+        token.name = value.args?.currency_id?.token;
+      }
 
       await ensureBlock(blockId);
       await ensureBatchRecord(batchRecordId);
